@@ -43,8 +43,6 @@ class MusicNotificationManager(
         notificationManager.setPlayer(player)
     }
 
-
-
     private inner class DescriptionAdapter(
             private val mediaController:MediaControllerCompat
     ):PlayerNotificationManager.MediaDescriptionAdapter{
@@ -67,9 +65,7 @@ class MusicNotificationManager(
                             callback.onBitmap(resource)
                         }
 
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                            TODO("Not yet implemented")
-                        }
+                        override fun onLoadCleared(placeholder: Drawable?) = Unit
 
                     })
             return null

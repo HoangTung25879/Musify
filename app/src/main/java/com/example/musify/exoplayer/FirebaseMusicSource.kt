@@ -39,7 +39,7 @@ class FirebaseMusicSource @Inject constructor(
         }
         state = STATE_INITIALIZED
     }
-
+    //convert songs list to media source for exoplayer prepare in MusicService.kt
     fun asMediaSource(dataSourceFactory: DefaultDataSourceFactory):ConcatenatingMediaSource{
         val concatenatingMediaSource = ConcatenatingMediaSource()
         songs.forEach{song->

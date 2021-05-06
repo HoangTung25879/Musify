@@ -9,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
+import com.example.musify.data.Constants.NETWORK_ERROR
 import com.example.musify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
@@ -142,6 +143,7 @@ class MusicService: MediaBrowserServiceCompat(){
                             isPlayerInitialized = true
                         }
                     } else{
+                        mediaSession.sendSessionEvent(NETWORK_ERROR,null)
                         result.sendResult(null)
                     }
                 }

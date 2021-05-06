@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/error/baseline_error_24.xml" />
+                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/music_note/baseline_music_note_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_baseline_error_24" />
+                            <entry key="outputName" value="ic_baseline_music_note_24" />
                             <entry key="sourceFile" value="D:\Musify" />
                           </map>
                         </option>

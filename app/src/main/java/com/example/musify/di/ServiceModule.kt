@@ -1,4 +1,4 @@
-package com.example.musify.depinjection
+package com.example.musify.di
 
 import android.content.Context
 import com.example.musify.data.remote.MusicDatabase

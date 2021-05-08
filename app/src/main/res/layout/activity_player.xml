@@ -4,28 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".MainActivity">
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcListMusic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".PlayerActivity">
 
     <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerview"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rcListMusic">
+        app:layout_constraintTop_toTopOf="parent">
 
     </com.google.android.exoplayer2.ui.PlayerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

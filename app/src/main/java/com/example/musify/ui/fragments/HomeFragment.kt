@@ -31,7 +31,7 @@ class HomeFragment :Fragment(R.layout.fragment_home){
         allSongsProgressBar = view.findViewById(R.id.allSongsProgressBar)
         setupRecyclerView(view)
         subscribeToObservers()
-        songAdapter.setOnItemClickListener {
+        songAdapter.setItemClickListener {
             Log.d("AAA","CLICKED")
             mainViewModel.playOrToggleSong(it)
         }

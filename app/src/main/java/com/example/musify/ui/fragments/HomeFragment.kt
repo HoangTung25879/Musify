@@ -1,6 +1,7 @@
 package com.example.musify.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
@@ -31,6 +32,7 @@ class HomeFragment :Fragment(R.layout.fragment_home){
         setupRecyclerView(view)
         subscribeToObservers()
         songAdapter.setOnItemClickListener {
+            Log.d("AAA","CLICKED")
             mainViewModel.playOrToggleSong(it)
         }
 

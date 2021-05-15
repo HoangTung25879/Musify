@@ -13,6 +13,7 @@ import com.example.musify.data.Constants.NETWORK_ERROR
 import com.example.musify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -75,7 +76,10 @@ class MusicService: MediaBrowserServiceCompat(){
                 mediaSession.sessionToken,
                 MusicPlayerNotificationListener(this)
         ){
-            currSongDuration = exoPlayer.duration
+            //check this to fix bug show time 47:59 in SongFragment
+            if ( exoPlayer.duration != C.TIME_UNSET){
+                currSongDuration = exoPlayer.duration
+            }
         }
 
         val musicPlaybackPreparer = MusicPlaybackPreparer(firebaseMusicSource){

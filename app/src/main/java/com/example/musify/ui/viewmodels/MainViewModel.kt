@@ -17,8 +17,8 @@ import com.example.musify.exoplayer.isPrepared
 class MainViewModel @ViewModelInject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ):ViewModel(){
-    private val _mediaItem = MutableLiveData<Resource<List<Song>>>()
-    val mediaItem : LiveData<Resource<List<Song>>> = _mediaItem
+    private val _mediaItems = MutableLiveData<Resource<List<Song>>>()
+    val mediaItems : LiveData<Resource<List<Song>>> = _mediaItems
 
     val isConnected = musicServiceConnection.isConnected
     val networkError = musicServiceConnection.networkError
@@ -26,7 +26,7 @@ class MainViewModel @ViewModelInject constructor(
     val playbackState = musicServiceConnection.playbackState
 
     init {
-        _mediaItem.postValue(Resource.loading(null))
+        _mediaItems.postValue(Resource.loading(null))
         musicServiceConnection.subscribe(MEDIA_ROOT_ID, object: MediaBrowserCompat.SubscriptionCallback(){
             override fun onChildrenLoaded(
                 parentId: String,
@@ -42,7 +42,7 @@ class MainViewModel @ViewModelInject constructor(
                         it.description.iconUri.toString()
                     )
                 }
-                _mediaItem.postValue(Resource.success(items))
+                _mediaItems.postValue(Resource.success(items))
             }
         })
     }

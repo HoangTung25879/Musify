@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import com.bumptech.glide.RequestManager
 import com.example.musify.R
+import kotlinx.android.synthetic.main.list_item.view.*
 import javax.inject.Inject
 
 class SongAdapter @Inject constructor(
@@ -15,9 +16,10 @@ class SongAdapter @Inject constructor(
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = songs[position]
         holder.itemView.apply{
-            findViewById<TextView>(R.id.tvPrimary).text = song.title
-            findViewById<TextView>(R.id.tvSecondary).text = song.subtitle
-            glide.load(song.imageUrl).into(findViewById(R.id.ivItemImage))
+
+            tvPrimary.text = song.title
+            tvSecondary.text = song.subtitle
+            glide.load(song.imageUrl).into(ivItemImage)
 
             setOnClickListener{
                 onItemClickListener?.let { click->

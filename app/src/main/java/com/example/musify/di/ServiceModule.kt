@@ -1,7 +1,7 @@
 package com.example.musify.di
 
 import android.content.Context
-import com.example.musify.data.remote.MusicDatabase
+import com.example.musify.data.MusicDatabase
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes

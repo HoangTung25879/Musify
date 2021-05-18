@@ -1,5 +1,7 @@
 package com.example.musify.ui
 
+import android.Manifest
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
@@ -10,13 +12,18 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.example.musify.R
 import com.example.musify.adapter.SwipeSongAdapter
-import com.example.musify.data.Status
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -39,6 +46,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //setup permission
+        requestPermission(this)
+        //
         subscribeToObservers()
         vpSong.adapter = swipeSongAdapter
         vpSong.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
@@ -89,6 +99,26 @@ class MainActivity : AppCompatActivity() {
             vpSong.currentItem = newItemIndex
             currPlayingSong = song
         }
+    }
+
+    private fun requestPermission(context: Context){
+        Dexter.withContext(context)
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+//                    val musicList:List<MediaMetadataCompat> = localMusicSource.fetchMediaData(this)
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onPermissionRationaleShouldBeShown(p0: PermissionRequest?, p1: PermissionToken?) {
+                    p1?.continuePermissionRequest()
+                }
+
+            })
+            .check()
     }
 
     private fun subscribeToObservers() {

@@ -19,7 +19,7 @@ class MusicNotificationManager(
         private val context:Context,
         sessionToken: MediaSessionCompat.Token,
         notificationListener: PlayerNotificationManager.NotificationListener,
-        private val newSongCallback: ()->Unit
+        private val newSongCallback: ()->Unit //Detect when a new song is playing to update current duration
 ) {
 
     private val notificationManager: PlayerNotificationManager
@@ -31,7 +31,7 @@ class MusicNotificationManager(
                 R.string.notification_channel_name,
                 R.string.notification_channel_description,
                 NOTIFICATION_ID,
-                DescriptionAdapter(mediaController),
+                DescriptionAdapter(mediaController), // inner class extend MediaDescriptionAdapter
                 notificationListener
         ).apply {
             setSmallIcon(R.drawable.ic_baseline_music_note_24)

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import com.example.musify.R
 import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
+import com.example.musify.exoplayer.FirebaseMusicSource
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
@@ -106,7 +108,6 @@ class MainActivity : AppCompatActivity() {
             .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-//                    val musicList:List<MediaMetadataCompat> = localMusicSource.fetchMediaData(this)
                 }
 
                 override fun onPermissionDenied(p0: PermissionDeniedResponse?) {

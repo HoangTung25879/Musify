@@ -39,10 +39,4 @@ object AppModule {
             .error(R.drawable.ic_image)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
     )
-
-//    @Singleton
-//    @Provides
-//    fun provideContext(musifyApplication: MusifyApplication):Context{
-//        return musifyApplication.applicationContext
-//    }
 }

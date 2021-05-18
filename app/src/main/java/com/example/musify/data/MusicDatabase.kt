@@ -18,7 +18,7 @@ import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MusicDatabase {
+class MusicDatabase(val context: Context) {
     private val firestore = FirebaseFirestore.getInstance()
     private val songCollection = firestore.collection(SONG_COLLECTION)
     suspend fun getAllSongs():List<Song>{
@@ -36,7 +36,7 @@ class MusicDatabase {
         if (data != null) return BitmapFactory.decodeByteArray(data, 0, data.size)
         return null
     }
-    fun getAllAudioFromDevice(context: Context):List<Song>{
+    fun getAllAudioFromDevice():List<Song>{
         val musicList = mutableListOf<Song>()
         val collection =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -61,6 +61,7 @@ class MusicService: MediaBrowserServiceCompat(){
         //coroutine fetch song
         serviceScope.launch {
             firebaseMusicSource.fetchMediaData()
+            firebaseMusicSource.fetchMediaDataFromLocal()
         }
         val activityIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let{
             PendingIntent.getActivity(this,0,it,0)

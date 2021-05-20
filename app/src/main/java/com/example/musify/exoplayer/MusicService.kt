@@ -44,7 +44,7 @@ class MusicService: MediaBrowserServiceCompat(){
     private lateinit var musicNotificationManager: MusicNotificationManager
 
     private val serviceJob = Job()
-    private val serviceScope = CoroutineScope(Dispatchers.Main+serviceJob)
+    private val serviceScope = CoroutineScope(Dispatchers.Main+serviceJob) //Then we don't need to cancel our coroutines manually when the service stops because the scope cares about that
 
     private lateinit var mediaSession : MediaSessionCompat
     private lateinit var mediaSessionConnector: MediaSessionConnector
@@ -106,11 +106,11 @@ class MusicService: MediaBrowserServiceCompat(){
     private fun preparePlayer(
             songs:List<MediaMetadataCompat>,
             itemToPlay: MediaMetadataCompat?,
-            playNow: Boolean
+            playNow: Boolean //usually pass false for first time and let user choose to play when already play and switch song pass true
     ){
         val currSongIndex = if (currPlayingSong == null) 0 else songs.indexOf(itemToPlay)
         exoPlayer.prepare(firebaseMusicSource.asMediaSource(dataSourceFactory))
-        exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long
+        exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long // play from beginning
         exoPlayer.playWhenReady = playNow
     }
 
@@ -134,10 +134,12 @@ class MusicService: MediaBrowserServiceCompat(){
         return BrowserRoot(MEDIA_ROOT_ID,null)
     }
 
+    //load playlist
     override fun onLoadChildren(
         parentId: String,
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
+        //MEDIA_ROOT_ID is id of a playlist
         when(parentId){
             MEDIA_ROOT_ID ->{
                 val resultsSent = firebaseMusicSource.whenReady { isInitialized->

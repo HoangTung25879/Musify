@@ -13,10 +13,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.musify.data.Constants.NETWORK_ERROR
 import com.example.musify.data.Event
 import com.example.musify.data.Resource
-
+//class sit between service and fragment(activity)
 class MusicServiceConnection(
         context: Context
 ) {
+    //check if music service is connected with view
     private val _isConnected = MutableLiveData<Event<Resource<Boolean>>>()
     val isConnected: LiveData<Event<Resource<Boolean>>> = _isConnected
 
@@ -40,15 +41,18 @@ class MusicServiceConnection(
             ),
             mediaBrowserConnectionCallback,
             null
-    ).apply { connect() }
+    ).apply { connect() } // call connect() to trigger onConnected function in MediaBrowserConnectionCallback
 
+    //cant assign equal because need to wait to pass token to media controller
+    //using to skip pause play resume song
     val transportControls: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
 
+    //call to subscribe playlist or single media item
     fun subscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
         mediaBrowser.subscribe(parentId,callback)
     }
-
+    //call to unsubscribe playlist or single media item
     fun unsubscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
         mediaBrowser.unsubscribe(parentId,callback)
     }
@@ -57,9 +61,11 @@ class MusicServiceConnection(
             private val context: Context
     ):MediaBrowserCompat.ConnectionCallback(){
         override fun onConnected() {
+            //set mediacontroller token
             mediaController = MediaControllerCompat(context,mediaBrowser.sessionToken).apply {
                 registerCallback(MediaControllerCallback())
             }
+            //connected
             _isConnected.postValue(Event(Resource.success(true)))
         }
 
@@ -75,15 +81,17 @@ class MusicServiceConnection(
             )))
         }
     }
+
     private inner class MediaControllerCallback: MediaControllerCompat.Callback(){
+        //call when user STOP PAUSE PLAY SKIP ...etc
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
            _playbackState.postValue(state)
         }
-
+        //When song change (call when player skip to next song or previous song)
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             _currPlayingSong.postValue(metadata)
         }
-
+        //notify when network error
         override fun onSessionEvent(event: String?, extras: Bundle?) {
             super.onSessionEvent(event, extras)
             when(event){
@@ -97,9 +105,10 @@ class MusicServiceConnection(
                 )
             }
         }
-
+        //if session destroy postvalue suspend status
         override fun onSessionDestroyed() {
             mediaBrowserConnectionCallback.onConnectionSuspended()
         }
     }
+
 }

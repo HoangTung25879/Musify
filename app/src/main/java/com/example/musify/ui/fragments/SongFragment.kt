@@ -39,6 +39,7 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        //requireActivity because this viewmodel is bound to activity lifecycle not fragment lifecycle
         subscribeToObservers()
 
         ivPlayPauseDetail.setOnClickListener{
@@ -86,7 +87,7 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
                 when(result.status){
                     SUCCESS ->{
                         result.data?.let { songs ->
-                            if (currPlayingSong == null && songs.isNotEmpty()){
+                            if (currPlayingSong == null && songs.isNotEmpty()){ // mean just launch fragment
                                 currPlayingSong = songs[0]
                                 updateTitleAndSongImage(songs[0])
                             }

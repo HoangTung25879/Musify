@@ -21,7 +21,7 @@ abstract class BaseSongAdapter(
     override fun getItemCount(): Int {
         return songs.size
     }
-
+    //TODO: change to click listener teacher Nam use
     protected var onItemClickListener: ((Song)->Unit)? = null
 
     fun setItemClickListener(listener: (Song)->Unit){

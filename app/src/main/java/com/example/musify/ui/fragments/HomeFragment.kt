@@ -28,6 +28,7 @@ class HomeFragment :Fragment(R.layout.fragment_home){
         setupRecyclerView(view)
         subscribeToObservers()
         songAdapter.setItemClickListener {
+            //click on a song is playing we dont want to pause it so no pass toggle true here
             mainViewModel.playOrToggleSong(it)
         }
 
@@ -43,6 +44,7 @@ class HomeFragment :Fragment(R.layout.fragment_home){
                 Status.SUCCESS->{
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs->
+                        //display list song to view
                         songAdapter.songs = songs
                     }
                 }

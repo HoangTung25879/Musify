@@ -33,7 +33,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels() //bind viewmodel to the lifecycle where we initialize this viewmodel
 
     @Inject
     lateinit var swipeSongAdapter: SwipeSongAdapter
@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         vpSong.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                //if a song is playing and switch song we want to play it
+                //if a song is pause and switch song we update current playing song
                 if (playbackState?.isPlaying == true){
                     mainViewModel.playOrToggleSong(swipeSongAdapter.songs[position])
                 } else {
@@ -97,6 +99,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchViewPagerToCurrentSong(song: Song) {
         val newItemIndex = swipeSongAdapter.songs.indexOf(song)
+        //if song dont exist in list will return -1
         if (newItemIndex != -1) {
             vpSong.currentItem = newItemIndex
             currPlayingSong = song
@@ -129,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                     SUCCESS -> {
                         result.data?.let { songs ->
                             swipeSongAdapter.songs = songs
+                            //because if songlist empty and we want to display image from first song app will crash
                             if (songs.isNotEmpty()) {
                                 glide.load((currPlayingSong ?: songs[0]).imageUrl)
                                     .into(ivCurSongImage)
@@ -148,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
         }
+        //change play pause icon
         mainViewModel.playbackState.observe(this){
             playbackState = it
             ivPlayPause.setImageResource(

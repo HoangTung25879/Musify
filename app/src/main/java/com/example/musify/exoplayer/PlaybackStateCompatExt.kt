@@ -14,8 +14,8 @@ inline val PlaybackStateCompat.isPlaying
             state == STATE_PLAYING
 
 inline val PlaybackStateCompat.isPlayEnabled
-    get() = actions and ACTION_PLAY != 0L ||
-            (actions and ACTION_PLAY_PAUSE != 0L &&
+    get() = actions and ACTION_PLAY != 0L || // mean actionplay is not false
+            (actions and ACTION_PLAY_PAUSE != 0L && //mean actionplaypause is not false and state is pause
                     state == STATE_PAUSED)
 
 inline val PlaybackStateCompat.currentPlaybackPosition : Long

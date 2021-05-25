@@ -53,14 +53,15 @@ class MainViewModel @ViewModelInject constructor(
     fun skipToPreviousSong(){
         musicServiceConnection.transportControls.skipToPrevious()
     }
+    //jump to time
     fun seekTo(pos:Long){
         musicServiceConnection.transportControls.seekTo(pos)
     }
-
+    //toggle to true to change play state
     fun playOrToggleSong(mediaItem:Song,toggle:Boolean = false){
-        val isPrepared = playbackState.value?.isPrepared ?: false
-        if (isPrepared && mediaItem.mediaId ==
-            currPlayingSong?.value?.getString(METADATA_KEY_MEDIA_ID)){
+        val isPrepared = playbackState.value?.isPrepared ?: false //playbackState.value : get value from live data object
+        if (isPrepared && mediaItem.mediaId == currPlayingSong?.value?.getString(METADATA_KEY_MEDIA_ID)){
+            //toggle play pause current song
             playbackState.value?.let { playbackState ->
                 when{
                     playbackState.isPlaying -> if(toggle) musicServiceConnection.transportControls.pause()
@@ -69,6 +70,7 @@ class MainViewModel @ViewModelInject constructor(
                 }
             }
         } else {
+            //play new song
             musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId,null)
         }
     }

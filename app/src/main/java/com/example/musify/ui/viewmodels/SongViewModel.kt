@@ -27,12 +27,15 @@ class SongViewModel @ViewModelInject constructor(
     init{
         updateCurrentPlayerPosition()
     }
+    //create coroutine bound to this viewmodel lifecycle and continuous update player position
+    //and song duration
     private fun updateCurrentPlayerPosition(){
+        //coroutine cancel when viewmodel destroy
         viewModelScope.launch {
             while (true){
                 val pos = playbackState.value?.currentPlaybackPosition
                 if (currPlayerPosition.value != pos){
-                    _currPlayerPosition.postValue(pos)
+                    _currPlayerPosition.postValue(pos!!)
                     _currSongDuration.postValue(MusicService.currSongDuration)
                 }
                 delay(Constants.UPDATE_PLAYER_POSITION_INTERVAL)

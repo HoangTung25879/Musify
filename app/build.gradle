@@ -104,4 +104,10 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-core:2.11.8"
     api "com.google.android.exoplayer:exoplayer-ui:2.11.8"
     api "com.google.android.exoplayer:extension-mediasession:2.11.8"
+
+    //Round Image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+}
+repositories {
+    mavenCentral()
 }

@@ -77,6 +77,7 @@ class MusicService: MediaBrowserServiceCompat(){
                 mediaSession.sessionToken,
                 MusicPlayerNotificationListener(this)
         ){
+            //this is newSongCallback
             //check this to fix bug show time 47:59 in SongFragment
             if ( exoPlayer.duration != C.TIME_UNSET){
                 currSongDuration = exoPlayer.duration

@@ -18,13 +18,21 @@ import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.example.musify.ui.viewmodels.SongViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_song.*
+import kotlinx.android.synthetic.main.fragment_song_new.*
+import kotlinx.android.synthetic.main.fragment_song_new.ivPlayPauseDetail
+import kotlinx.android.synthetic.main.fragment_song_new.ivSkip
+import kotlinx.android.synthetic.main.fragment_song_new.ivSkipPrevious
+import kotlinx.android.synthetic.main.fragment_song_new.ivSongImage
+import kotlinx.android.synthetic.main.fragment_song_new.seekBar
+import kotlinx.android.synthetic.main.fragment_song_new.tvCurTime
+import kotlinx.android.synthetic.main.fragment_song_new.tvSongDuration
+import kotlinx.android.synthetic.main.fragment_song_new.tvSongName
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SongFragment:Fragment(R.layout.fragment_song ) {
+class SongFragment:Fragment(R.layout.fragment_song_new ) {
 
     @Inject
     lateinit var glide: RequestManager
@@ -76,8 +84,8 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
     }
 
     private fun updateTitleAndSongImage(song: Song){
-        val title = "${song.title} - ${song.subtitle}"
-        tvSongName.text = title
+        tvSongName.text = song.title
+        tvSongArtist.text = song.subtitle
         glide.load(song.imageUrl).into(ivSongImage)
     }
 

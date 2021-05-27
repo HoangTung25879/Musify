@@ -10,8 +10,13 @@
     <fragment
         android:id="@+id/songFragment"
         android:name="com.example.musify.ui.fragments.SongFragment"
-        android:label="SongFragment" />
+        android:label="SongFragment"
+        />
     <action android:id="@+id/globalActionToSongFragment"
         app:destination="@+id/songFragment"
+        app:enterAnim="@anim/slide_in_bottom"
+        app:exitAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_out_top"
+        app:popEnterAnim="@anim/wait_anim"
         />
 </navigation>

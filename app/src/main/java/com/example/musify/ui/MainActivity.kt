@@ -21,10 +21,12 @@ import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -89,12 +91,14 @@ class MainActivity : AppCompatActivity() {
         ivCurSongImage.isVisible = false
         vpSong.isVisible = false
         ivPlayPause.isVisible = false
+        bottom_navigation.isVisible = false
     }
 
     private fun showBottomBar(){
         ivCurSongImage.isVisible = true
         vpSong.isVisible = true
         ivPlayPause.isVisible = true
+        bottom_navigation.isVisible = true
     }
 
     private fun switchViewPagerToCurrentSong(song: Song) {
@@ -108,19 +112,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestPermission(context: Context){
         Dexter.withContext(context)
-            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO)
+            .withListener(object:MultiplePermissionsListener{
+                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+
                 }
 
-                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    p1: PermissionToken?
+                ) {
                     TODO("Not yet implemented")
                 }
-
-                override fun onPermissionRationaleShouldBeShown(p0: PermissionRequest?, p1: PermissionToken?) {
-                    p1?.continuePermissionRequest()
-                }
-
             })
             .check()
     }

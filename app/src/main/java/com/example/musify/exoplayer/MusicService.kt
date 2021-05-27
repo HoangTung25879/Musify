@@ -7,15 +7,22 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
+import com.example.musify.data.Event
+import com.example.musify.data.Resource
+import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -30,6 +37,8 @@ class MusicService: MediaBrowserServiceCompat(){
     companion object{
         var currSongDuration = 0L
             private set
+        private val _audioSessId = MutableLiveData<Int>()
+        val audioSessId : LiveData<Int> = _audioSessId
     }
 
     @Inject
@@ -102,6 +111,16 @@ class MusicService: MediaBrowserServiceCompat(){
         musicPlayerEventListener = MusicPlayerEventListener(this)
         exoPlayer.addListener(musicPlayerEventListener)
         musicNotificationManager.showNotification(exoPlayer)
+        exoPlayer.addAnalyticsListener(object : AnalyticsListener{
+            override fun onAudioSessionId(
+                eventTime: AnalyticsListener.EventTime,
+                audioSessionId: Int
+            ) {
+                super.onAudioSessionId(eventTime, audioSessionId)
+                Log.d("AAAAA",audioSessionId.toString())
+                _audioSessId.postValue(audioSessionId)
+            }
+        })
     }
 
     private fun preparePlayer(
@@ -109,6 +128,7 @@ class MusicService: MediaBrowserServiceCompat(){
             itemToPlay: MediaMetadataCompat?,
             playNow: Boolean //usually pass false for first time and let user choose to play when already play and switch song pass true
     ){
+        Log.d("AAAAAA","PREPAREPLAYER")
         val currSongIndex = if (currPlayingSong == null) 0 else songs.indexOf(itemToPlay)
         exoPlayer.prepare(firebaseMusicSource.asMediaSource(dataSourceFactory))
         exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long // play from beginning

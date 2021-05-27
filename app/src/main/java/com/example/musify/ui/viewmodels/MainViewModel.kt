@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Resource
 import com.example.musify.data.entities.Song
-import com.example.musify.exoplayer.MusicServiceConnection
-import com.example.musify.exoplayer.isPlayEnabled
-import com.example.musify.exoplayer.isPlaying
-import com.example.musify.exoplayer.isPrepared
+import com.example.musify.exoplayer.*
 
 class MainViewModel @ViewModelInject constructor(
     private val musicServiceConnection: MusicServiceConnection
@@ -24,6 +21,7 @@ class MainViewModel @ViewModelInject constructor(
     val networkError = musicServiceConnection.networkError
     val currPlayingSong = musicServiceConnection.currPlayingSong
     val playbackState = musicServiceConnection.playbackState
+    val audioSessionId = MusicService.audioSessId
 
     init {
         _mediaItems.postValue(Resource.loading(null))

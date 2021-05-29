@@ -1,10 +1,8 @@
 package com.example.musify.adapter
 
-import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import com.example.musify.R
 import kotlinx.android.synthetic.main.swipe_item.view.*
-import javax.inject.Inject
 
 //Declare provider in AppModule or declare an empty constructor like this for dagger-hilt
 //class SwipeSongAdapter @Inject constructor() :BaseSongAdapter(R.layout.swipe_item) {

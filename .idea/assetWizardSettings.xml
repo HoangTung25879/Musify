@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/keyboard_arrow_down/baseline_keyboard_arrow_down_24.xml" />
+                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/local_fire_department/baseline_local_fire_department_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_arrow_down" />
+                            <entry key="outputName" value="ic_firebase" />
                             <entry key="sourceFile" value="D:\Musify" />
                           </map>
                         </option>

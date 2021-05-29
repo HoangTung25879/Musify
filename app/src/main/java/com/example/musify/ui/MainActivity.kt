@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -15,7 +14,7 @@ import com.example.musify.R
 import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
-import com.example.musify.exoplayer.FirebaseMusicSource
+import com.example.musify.exoplayer.MusicSource
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
@@ -23,11 +22,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -46,6 +42,9 @@ class MainActivity : AppCompatActivity() {
     private var currPlayingSong: Song? = null
 
     private var playbackState : PlaybackStateCompat? = null
+
+    private var musicSource = MusicSource()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

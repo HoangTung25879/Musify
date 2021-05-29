@@ -7,15 +7,11 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
-import com.example.musify.data.Event
-import com.example.musify.data.Resource
-import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
@@ -31,7 +27,7 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 
 private const val SERVICE_TAG = "MusicService"
-
+//a Service that manages the player and handles preparing and playing media
 @AndroidEntryPoint
 class MusicService: MediaBrowserServiceCompat(){
     companion object{
@@ -47,8 +43,7 @@ class MusicService: MediaBrowserServiceCompat(){
     @Inject
     lateinit var exoPlayer: SimpleExoPlayer
 
-    @Inject
-    lateinit var firebaseMusicSource: FirebaseMusicSource
+    private val musicSource: MusicSource = MusicSource()
 
     private lateinit var musicNotificationManager: MusicNotificationManager
 
@@ -66,11 +61,11 @@ class MusicService: MediaBrowserServiceCompat(){
     private lateinit var musicPlayerEventListener:MusicPlayerEventListener
 
     override fun onCreate() {
+        //create a MediaSession and get it’s token.
         super.onCreate()
         //coroutine fetch song
         serviceScope.launch {
-            firebaseMusicSource.fetchMediaData()
-            firebaseMusicSource.fetchMediaDataFromLocal()
+            musicSource.fetchMediaData()
         }
         val activityIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let{
             PendingIntent.getActivity(this,0,it,0)
@@ -79,6 +74,9 @@ class MusicService: MediaBrowserServiceCompat(){
             setSessionActivity(activityIntent)
             isActive = true
         }
+        //Pass this token to the MediaBrowserService by calling setSessionToken,
+        // and this will connect the MediaBrowserService to the MediaSession,
+        // and will allow the MediaBrowser (client to work with the MediaSession)
         sessionToken = mediaSession.sessionToken
 
         musicNotificationManager = MusicNotificationManager(
@@ -93,10 +91,10 @@ class MusicService: MediaBrowserServiceCompat(){
             }
         }
 
-        val musicPlaybackPreparer = MusicPlaybackPreparer(firebaseMusicSource){
+        val musicPlaybackPreparer = MusicPlaybackPreparer(musicSource){
             currPlayingSong = it
             preparePlayer(
-                    firebaseMusicSource.songs,
+                    musicSource.songs,
                     it,
                     true
             )
@@ -117,7 +115,6 @@ class MusicService: MediaBrowserServiceCompat(){
                 audioSessionId: Int
             ) {
                 super.onAudioSessionId(eventTime, audioSessionId)
-                Log.d("AAAAA",audioSessionId.toString())
                 _audioSessId.postValue(audioSessionId)
             }
         })
@@ -128,9 +125,8 @@ class MusicService: MediaBrowserServiceCompat(){
             itemToPlay: MediaMetadataCompat?,
             playNow: Boolean //usually pass false for first time and let user choose to play when already play and switch song pass true
     ){
-        Log.d("AAAAAA","PREPAREPLAYER")
         val currSongIndex = if (currPlayingSong == null) 0 else songs.indexOf(itemToPlay)
-        exoPlayer.prepare(firebaseMusicSource.asMediaSource(dataSourceFactory))
+        exoPlayer.prepare(musicSource.asMediaSource(dataSourceFactory))
         exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long // play from beginning
         exoPlayer.playWhenReady = playNow
     }
@@ -152,6 +148,9 @@ class MusicService: MediaBrowserServiceCompat(){
         clientUid: Int,
         rootHints: Bundle?
     ): BrowserRoot? {
+        // Returning null == no one can connect
+        // so we’ll return something
+        //must return a non-null BrowserRoot to allow connections to your MediaBrowserServiceCompat
         return BrowserRoot(MEDIA_ROOT_ID,null)
     }
 
@@ -163,11 +162,14 @@ class MusicService: MediaBrowserServiceCompat(){
         //MEDIA_ROOT_ID is id of a playlist
         when(parentId){
             MEDIA_ROOT_ID ->{
-                val resultsSent = firebaseMusicSource.whenReady { isInitialized->
+                val resultsSent = musicSource.whenReady { isInitialized->
                     if(isInitialized){
-                        result.sendResult(firebaseMusicSource.asMediaItem())
-                        if(!isPlayerInitialized && firebaseMusicSource.songs.isNotEmpty()){
-                            preparePlayer(firebaseMusicSource.songs,firebaseMusicSource.songs[0],playNow = false)
+                        //Each item returned is a MediaItem and each MediaItem consists of a MediaDescriptionCompat (a subset of metadata) and some combination of the two available flags:
+                        //FLAG_BROWSABLE indicates that this MediaItem has children of its own (i.e., its media id can be passed to onLoadChildren() to get more MediaItems.
+                        //FLAG_PLAYABLE should be used when this MediaItem can be directly played (i.e., passed to playFromMediaId() to start playback)
+                        result.sendResult(musicSource.asMediaItem())
+                        if(!isPlayerInitialized && musicSource.songs.isNotEmpty()){
+                            preparePlayer(musicSource.songs,musicSource.songs[0],playNow = false)
                             isPlayerInitialized = true
                         }
                     } else{
@@ -184,7 +186,7 @@ class MusicService: MediaBrowserServiceCompat(){
 
     private inner class MusicQueueNavigator:TimelineQueueNavigator(mediaSession){
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-            return firebaseMusicSource.songs[windowIndex].description
+            return musicSource.songs[windowIndex].description
         }
     }
 }

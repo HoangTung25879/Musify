@@ -1,6 +1,5 @@
 package com.example.musify.adapter
 
-import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import com.bumptech.glide.RequestManager
 import com.example.musify.R

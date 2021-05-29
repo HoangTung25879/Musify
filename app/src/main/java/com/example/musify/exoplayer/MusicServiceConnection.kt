@@ -50,18 +50,20 @@ class MusicServiceConnection(
 
     //call to subscribe playlist or single media item
     fun subscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
+        //SubscriptionCallback - this is used to update your UI so that you can show the user content (from the MusicService) that they can browse for playback.
         mediaBrowser.subscribe(parentId,callback)
     }
     //call to unsubscribe playlist or single media item
     fun unsubscribe(parentId:String,callback:MediaBrowserCompat.SubscriptionCallback){
         mediaBrowser.unsubscribe(parentId,callback)
     }
-
+    //this is used to get the MediaController using the MediaBrowser’s MediaSession token.
+    // You can then get the TransportControls that you will use to actually initiate playback, pause, stop, skip, etc.
     private inner class MediaBrowserConnectionCallback(
             private val context: Context
     ):MediaBrowserCompat.ConnectionCallback(){
         override fun onConnected() {
-            //set mediacontroller token
+            //set mediacontroller token give us access to everything
             mediaController = MediaControllerCompat(context,mediaBrowser.sessionToken).apply {
                 registerCallback(MediaControllerCallback())
             }
@@ -81,7 +83,7 @@ class MusicServiceConnection(
             )))
         }
     }
-
+//this is used to update the of your app with the current playback state, and what media is currently loaded.
     private inner class MediaControllerCallback: MediaControllerCompat.Callback(){
         //call when user STOP PAUSE PLAY SKIP ...etc
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {

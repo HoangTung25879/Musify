@@ -1,25 +1,19 @@
 package com.example.musify.ui.fragments
 
-import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
-import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.SeekBar
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.musify.R
-import com.example.musify.data.Status
 import com.example.musify.data.Status.SUCCESS
 import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.*

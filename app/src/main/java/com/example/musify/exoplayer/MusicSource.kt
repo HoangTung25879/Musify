@@ -8,6 +8,7 @@ import android.support.v4.media.MediaMetadataCompat.*
 import android.util.Log
 import androidx.core.net.toUri
 import com.example.musify.data.MusicDatabase
+import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.State.*
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -16,16 +17,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class FirebaseMusicSource @Inject constructor(
-    private val musicDatabase: MusicDatabase
-){ // list of song get from firebase
-
+class MusicSource { // list of song get from firebase
+    private val musicDatabase = MusicDatabase()
     //song list of type MediaMetaDataCompat to use in music service (contain metadata of song)
     var songs = emptyList<MediaMetadataCompat>()
-    var songsLocal = emptyList<MediaMetadataCompat>()
 
     suspend fun fetchMediaData() = withContext(Dispatchers.IO){
         state = STATE_INITIALIZING
+        Log.d("AAAA","CALL")
         val allSong = musicDatabase.getAllSongs()
         songs = allSong.map { song->
             MediaMetadataCompat.Builder()
@@ -41,22 +40,6 @@ class FirebaseMusicSource @Inject constructor(
                 .build()
         }
         state = STATE_INITIALIZED
-    }
-    fun fetchMediaDataFromLocal(){
-        val allSong = musicDatabase.getAllAudioFromDevice()
-        songsLocal = allSong.map { song->
-            MediaMetadataCompat.Builder()
-                    .putString(METADATA_KEY_ARTIST,song.subtitle)
-                    .putString(METADATA_KEY_MEDIA_ID,song.mediaId)
-                    .putString(METADATA_KEY_TITLE,song.title)
-                    .putString(METADATA_KEY_DISPLAY_TITLE,song.title)
-                    .putString(METADATA_KEY_DISPLAY_ICON_URI,song.imageUrl)
-                    .putString(METADATA_KEY_MEDIA_URI,song.songUrl)
-                    .putString(METADATA_KEY_ALBUM_ART_URI,song.imageUrl)
-                    .putString(METADATA_KEY_DISPLAY_SUBTITLE,song.subtitle)
-                    .putString(METADATA_KEY_DISPLAY_DESCRIPTION,song.subtitle)
-                    .build()
-        }
     }
     //convert songs list to media source for exoplayer prepare in MusicService.kt (basically create playlist of song by concantenate song)
     fun asMediaSource(dataSourceFactory: DefaultDataSourceFactory):ConcatenatingMediaSource{

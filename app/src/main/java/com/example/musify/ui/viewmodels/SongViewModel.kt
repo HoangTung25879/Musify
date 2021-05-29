@@ -1,5 +1,6 @@
 package com.example.musify.ui.viewmodels
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,8 +36,8 @@ class SongViewModel @ViewModelInject constructor(
             while (true){
                 val pos = playbackState.value?.currentPlaybackPosition
                 if (currPlayerPosition.value != pos){
-                    _currPlayerPosition.postValue(pos!!)
                     _currSongDuration.postValue(MusicService.currSongDuration)
+                    _currPlayerPosition.postValue(pos!!)
                 }
                 delay(Constants.UPDATE_PLAYER_POSITION_INTERVAL)
             }

@@ -157,17 +157,18 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
             }
             seekBar.progress = it?.position?.toInt() ?: 0
         }
+        songViewModel.currSongDuration.observe(viewLifecycleOwner){
+            seekBar.max = it.toInt()
+            val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+            tvSongDuration.text = dateFormat.format(it)
+        }
         songViewModel.currPlayerPosition.observe(viewLifecycleOwner){
             if(shouldUpdateSeekbar){
                 seekBar.progress = it.toInt()
                 setCurrPlayerTimeToTextView(it)
             }
         }
-        songViewModel.currSongDuration.observe(viewLifecycleOwner){
-            seekBar.max = it.toInt()
-            val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-            tvSongDuration.text = dateFormat.format(it)
-        }
+
         mainViewModel.audioSessionId.observe(viewLifecycleOwner){
             if (it != -1){
                 createNewVisualizeManager(it)

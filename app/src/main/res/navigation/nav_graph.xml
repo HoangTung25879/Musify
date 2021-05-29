@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/firebaseSongFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.musify.ui.fragments.HomeFragment"
+        android:id="@+id/firebaseSongFragment"
+        android:name="com.example.musify.ui.fragments.FirebaseSongFragment"
         android:label="HomeFragment" />
     <fragment
-        android:id="@+id/songFragment"
-        android:name="com.example.musify.ui.fragments.SongFragment"
+        android:id="@+id/detailSongFragment"
+        android:name="com.example.musify.ui.fragments.DetailSongFragment"
         android:label="SongFragment"
         />
     <action android:id="@+id/globalActionToSongFragment"
-        app:destination="@+id/songFragment"
+        app:destination="@+id/detailSongFragment"
         app:enterAnim="@anim/slide_in_bottom"
         app:exitAnim="@anim/wait_anim"
         app:popExitAnim="@anim/slide_out_top"

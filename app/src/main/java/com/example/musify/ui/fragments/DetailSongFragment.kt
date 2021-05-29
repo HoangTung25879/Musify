@@ -6,7 +6,9 @@ import android.graphics.PixelFormat
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +39,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SongFragment:Fragment(R.layout.fragment_song ) {
+class DetailSongFragment:Fragment(R.layout.fragment_song ) {
     @Inject
     lateinit var glide: RequestManager
 
@@ -50,11 +52,12 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
 
     private var mVisualizerManager: NierVisualizerManager? = null
 
+    private var runnable: Runnable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         //requireActivity because this viewmodel is bound to activity lifecycle not fragment lifecycle
-        subscribeToObservers()
         songVisualizer.setZOrderOnTop(true)
         songVisualizer.holder.setFormat(PixelFormat.TRANSLUCENT)
         ivPlayPauseDetail.setOnClickListener{
@@ -91,12 +94,34 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
                 }
             }
         })
+        subscribeToObservers()
     }
 
     private fun updateTitleAndSongImage(song: Song){
         tvSongName.text = song.title
         tvSongArtist.text = song.subtitle
         glide.load(song.imageUrl).into(ivSongImage)
+    }
+
+    private fun startSpinAnimation(){
+        runnable = object : Runnable{
+            override fun run() {
+                ivSongImage?.let {
+                    it.animate().rotationBy(360f).setDuration(10000)
+                    .setInterpolator(LinearInterpolator()).start()
+                }
+            }
+        }
+        ivSongImage.animate().rotationBy(360f).withEndAction(runnable).setDuration(10000)
+            .setInterpolator(LinearInterpolator()).start()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        runnable = null
+    }
+    private fun stopSpinAnimation(){
+        ivSongImage.animate().cancel()
     }
 
     private fun subscribeToObservers(){
@@ -125,6 +150,11 @@ class SongFragment:Fragment(R.layout.fragment_song ) {
             ivPlayPauseDetail.setImageResource(
                 if(playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play
             )
+            when(it?.state){
+                STATE_PLAYING -> startSpinAnimation()
+                STATE_PAUSED -> stopSpinAnimation()
+                else -> Unit
+            }
             seekBar.progress = it?.position?.toInt() ?: 0
         }
         songViewModel.currPlayerPosition.observe(viewLifecycleOwner){

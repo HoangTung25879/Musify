@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
-                R.id.songFragment -> hideBottomBar()
-                R.id.homeFragment -> showBottomBar()
+                R.id.detailSongFragment -> hideBottomBar()
+                R.id.firebaseSongFragment -> showBottomBar()
                 else -> showBottomBar()
             }
         }

@@ -2,20 +2,23 @@ package com.example.musify.exoplayer
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
-import com.example.musify.exoplayer.callbacks.MusicPlaybackPreparer
 import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.analytics.AnalyticsListener
@@ -91,7 +94,7 @@ class MusicService: MediaBrowserServiceCompat(){
             }
         }
 
-        val musicPlaybackPreparer = MusicPlaybackPreparer(musicSource){
+        val musicPlaybackPreparer = MusicPlaybackPreparer(){
             currPlayingSong = it
             preparePlayer(
                     musicSource.songs,
@@ -188,5 +191,29 @@ class MusicService: MediaBrowserServiceCompat(){
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
             return musicSource.songs[windowIndex].description
         }
+    }
+    private inner class MusicPlaybackPreparer(private val playerPrepared: (MediaMetadataCompat?)->Unit) : MediaSessionConnector.PlaybackPreparer {
+        //dont need
+        override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?) = false
+
+        override fun getSupportedPrepareActions(): Long {
+            return PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
+                    PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
+        }
+
+        //dont need
+        override fun onPrepare(playWhenReady: Boolean) = Unit
+
+        override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+            musicSource.whenReady {
+                val itemToPlay = musicSource.songs.find { mediaId == it.description.mediaId }
+                playerPrepared(itemToPlay)
+            }
+        }
+
+        //dont need
+        override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) = Unit
+        //dont need
+        override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
     }
 }

@@ -11,11 +11,11 @@ import com.example.musify.adapter.SongAdapter
 import com.example.musify.data.Status
 import com.example.musify.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_firebase_song.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment :Fragment(R.layout.fragment_home){
+class FirebaseSongFragment :Fragment(R.layout.fragment_firebase_song){
 
     lateinit var mainViewModel: MainViewModel
 

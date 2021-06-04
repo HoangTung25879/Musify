@@ -23,7 +23,6 @@ import com.example.musify.R
 import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
-import com.example.musify.exoplayer.MusicSource
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel

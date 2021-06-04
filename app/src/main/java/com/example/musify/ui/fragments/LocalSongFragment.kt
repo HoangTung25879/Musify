@@ -30,7 +30,7 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
         val songs = musicDatabase.getAudioFromDevice(requireContext())
         songAdapter.songs = songs
         songAdapter.setItemClickListener {
-            mainViewModel.playOrToggleSong(it)
+//            mainViewModel.playOrToggleSong(it)
         }
     }
 

@@ -67,6 +67,7 @@ class MusicService: MediaBrowserServiceCompat(){
     override fun onCreate() {
         //create a MediaSession and get it’s token.
         super.onCreate()
+        Log.d(SERVICE_TAG,"ONCREATE")
         //coroutine fetch song
         serviceScope.launch {
             musicSource.fetchMediaData()
@@ -95,7 +96,7 @@ class MusicService: MediaBrowserServiceCompat(){
             }
         }
 
-        val musicPlaybackPreparer = MusicPlaybackPreparer(){
+        val musicPlaybackPreparer = MusicPlaybackPreparer{
             currPlayingSong = it
             preparePlayer(
                     musicSource.songs,
@@ -129,6 +130,7 @@ class MusicService: MediaBrowserServiceCompat(){
             itemToPlay: MediaMetadataCompat?,
             playNow: Boolean //usually pass false for first time and let user choose to play when already play and switch song pass true
     ){
+        Log.d(SERVICE_TAG,"PREPAREPLAYER")
         val currSongIndex = if (currPlayingSong == null) 0 else songs.indexOf(itemToPlay)
         exoPlayer.prepare(musicSource.asMediaSource(dataSourceFactory))
         exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long // play from beginning
@@ -155,6 +157,7 @@ class MusicService: MediaBrowserServiceCompat(){
         // Returning null == no one can connect
         // so we’ll return something
         //must return a non-null BrowserRoot to allow connections to your MediaBrowserServiceCompat
+        Log.d(SERVICE_TAG,"ONGETROOT")
         return BrowserRoot(MEDIA_ROOT_ID,null)
     }
 
@@ -164,6 +167,7 @@ class MusicService: MediaBrowserServiceCompat(){
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
         //MEDIA_ROOT_ID is id of a playlist
+        Log.d(SERVICE_TAG,"ONLOADCHILDREN")
         when(parentId){
             MEDIA_ROOT_ID ->{
                 val resultsSent = musicSource.whenReady { isInitialized->
@@ -254,4 +258,8 @@ class MusicService: MediaBrowserServiceCompat(){
             }
         }
     }
+
+//    private fun setupMusic(){
+//
+//    }
 }

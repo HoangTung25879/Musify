@@ -11,17 +11,14 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
-import com.example.musify.exoplayer.callbacks.MusicPlayerEventListener
 import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ControlDispatcher
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
@@ -110,7 +107,7 @@ class MusicService: MediaBrowserServiceCompat(){
         mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
         mediaSessionConnector.setPlayer(exoPlayer)
 
-        musicPlayerEventListener = MusicPlayerEventListener(this)
+        musicPlayerEventListener = MusicPlayerEventListener()
         exoPlayer.addListener(musicPlayerEventListener)
         musicNotificationManager.showNotification(exoPlayer)
         exoPlayer.addAnalyticsListener(object : AnalyticsListener{
@@ -216,5 +213,18 @@ class MusicService: MediaBrowserServiceCompat(){
         override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) = Unit
         //dont need
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
+    }
+    private inner class MusicPlayerEventListener : Player.EventListener {
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            super.onPlayerStateChanged(playWhenReady, playbackState)
+            if(playbackState == Player.STATE_READY && !playWhenReady){
+                this@MusicService.stopForeground(false)
+            }
+        }
+
+        override fun onPlayerError(error: ExoPlaybackException) {
+            super.onPlayerError(error)
+            Toast.makeText(this@MusicService,"An unknown error occured", Toast.LENGTH_LONG).show()
+        }
     }
 }

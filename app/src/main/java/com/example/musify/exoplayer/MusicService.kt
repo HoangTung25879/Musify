@@ -1,5 +1,6 @@
 package com.example.musify.exoplayer
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
@@ -12,16 +13,18 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
+import com.example.musify.data.Constants
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
-import com.example.musify.exoplayer.callbacks.MusicPlayerNotificationListener
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -83,7 +86,7 @@ class MusicService: MediaBrowserServiceCompat(){
         musicNotificationManager = MusicNotificationManager(
                 this,
                 mediaSession.sessionToken,
-                MusicPlayerNotificationListener(this)
+                MusicPlayerNotificationListener()
         ){
             //this is newSongCallback
             //check this to fix bug show time 47:59 in SongFragment
@@ -225,6 +228,30 @@ class MusicService: MediaBrowserServiceCompat(){
         override fun onPlayerError(error: ExoPlaybackException) {
             super.onPlayerError(error)
             Toast.makeText(this@MusicService,"An unknown error occured", Toast.LENGTH_LONG).show()
+        }
+    }
+    private inner class MusicPlayerNotificationListener : PlayerNotificationManager.NotificationListener {
+        override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+            super.onNotificationCancelled(notificationId, dismissedByUser)
+            this@MusicService.apply {
+                stopForeground(true)
+                isForegoundService = false
+                stopSelf()
+            }
+        }
+
+        override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
+            super.onNotificationPosted(notificationId, notification, ongoing)
+            this@MusicService.apply {
+                if (ongoing && !isForegoundService){
+                    ContextCompat.startForegroundService(
+                            this,
+                            Intent(applicationContext,this::class.java)
+                    )
+                    startForeground(Constants.NOTIFICATION_ID,notification)
+                    isForegoundService=true
+                }
+            }
         }
     }
 }

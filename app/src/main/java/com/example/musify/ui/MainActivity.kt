@@ -2,10 +2,19 @@ package com.example.musify.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -19,11 +28,6 @@ import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -32,7 +36,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels() //bind viewmodel to the lifecycle where we initialize this viewmodel
-
     @Inject
     lateinit var swipeSongAdapter: SwipeSongAdapter
 
@@ -43,15 +46,21 @@ class MainActivity : AppCompatActivity() {
 
     private var playbackState : PlaybackStateCompat? = null
 
-    private var musicSource = MusicSource()
-
+    private var readPermissionGranted = false
+    private var writePermissionGranted = false
+    private var recordPermissionGranted = false
+    private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //setup permission
-        requestPermission(this)
         //
+        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
+            readPermissionGranted = permission[Manifest.permission.READ_EXTERNAL_STORAGE] ?: readPermissionGranted
+            writePermissionGranted = permission[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: writePermissionGranted
+            recordPermissionGranted = permission[Manifest.permission.RECORD_AUDIO] ?: recordPermissionGranted
+        }
+        updateOrRequestPermissions()
         subscribeToObservers()
         vpSong.adapter = swipeSongAdapter
         vpSong.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
@@ -84,6 +93,11 @@ class MainActivity : AppCompatActivity() {
                 else -> showBottomBar()
             }
         }
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            if (it.itemId == R.id.firebase_song) navHostFragment.findNavController().navigate(R.id.action_localSongFragment_to_firebaseSongFragment)
+            if (it.itemId == R.id.local_song) navHostFragment.findNavController().navigate(R.id.action_firebaseSongFragment_to_localSongFragment)
+            true
+        }
     }
 
     private fun hideBottomBar(){
@@ -109,22 +123,50 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestPermission(context: Context){
-        Dexter.withContext(context)
-            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO)
-            .withListener(object:MultiplePermissionsListener{
-                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+    private fun updateOrRequestPermissions(){
+        val hasReadPermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasWritePermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasRecordPermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+        val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        readPermissionGranted = hasReadPermission
+        writePermissionGranted = hasWritePermission || minSdk29
+        recordPermissionGranted = hasRecordPermission
+        Log.d("PERMISSIONFUNC","Read:$readPermissionGranted - Write:$writePermissionGranted -Record:$recordPermissionGranted")
+        val permissionsToRequest = mutableListOf<String>()
+        if (!writePermissionGranted){
+//            Log.d("PERMISSION","WRITE")
+            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        if (!readPermissionGranted){
+            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (!recordPermissionGranted){
+            permissionsToRequest.add(Manifest.permission.RECORD_AUDIO)
+        }
+        if(permissionsToRequest.isNotEmpty()){
+            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
+        }
+    }
 
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: MutableList<PermissionRequest>?,
-                    p1: PermissionToken?
-                ) {
-                    TODO("Not yet implemented")
-                }
-            })
-            .check()
+    private fun showDiaglog(){
+        val dialog = AlertDialog.Builder(this)
+        dialog.apply {
+            setMessage("You need to accept all permissions to use this app")
+            setTitle("Permission required")
+            setPositiveButton("Accept") {dialog , _ ->
+                updateOrRequestPermissions()
+            }
+            show()
+        }
     }
 
     private fun subscribeToObservers() {

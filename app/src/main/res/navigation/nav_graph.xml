@@ -6,7 +6,30 @@
     <fragment
         android:id="@+id/firebaseSongFragment"
         android:name="com.example.musify.ui.fragments.FirebaseSongFragment"
-        android:label="HomeFragment" />
+        android:label="FirebaseSongFragment">
+        <action
+            android:id="@+id/action_firebaseSongFragment_to_localSongFragment"
+            app:destination="@+id/localSongFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/localSongFragment"
+        android:name="com.example.musify.ui.fragments.LocalSongFragment"
+        android:label="LocalSongFragment"
+        >
+        <action
+            android:id="@+id/action_localSongFragment_to_firebaseSongFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:destination="@id/firebaseSongFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/detailSongFragment"
         android:name="com.example.musify.ui.fragments.DetailSongFragment"

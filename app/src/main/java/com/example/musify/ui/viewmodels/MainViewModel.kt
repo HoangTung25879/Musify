@@ -1,5 +1,6 @@
 package com.example.musify.ui.viewmodels
 
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Resource
 import com.example.musify.data.entities.Song
@@ -34,12 +36,16 @@ class MainViewModel @ViewModelInject constructor(
                 super.onChildrenLoaded(parentId, children)
                 Log.d("MAINVIEWMODEL","${children.size}")
                 val items = children.map {
+                    val bundle = it.description.extras
+                    val isLocal = bundle?.getString(IS_LOCAL).toBoolean()
+                    Log.d("MAINVIEWMODEL","${it.mediaId!!} - ${it.description.title} - ${it.description.subtitle} - ${it.description.mediaUri} - ${isLocal}")
                     Song(
                         it.mediaId!!,
                         it.description.title.toString(),
                         it.description.subtitle.toString(),
                         it.description.mediaUri.toString(),
-                        it.description.iconUri.toString()
+                        it.description.iconUri.toString(),
+                            isLocal = isLocal
                     )
                 }
                 _mediaItems.postValue(Resource.success(items))

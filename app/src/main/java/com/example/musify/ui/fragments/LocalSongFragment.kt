@@ -1,6 +1,7 @@
 package com.example.musify.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -15,11 +16,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_firebase_song.*
 import javax.inject.Inject
 
+const val TAG = "LOCALSONGFRAGMENT"
 @AndroidEntryPoint
 class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
 
     lateinit var mainViewModel: MainViewModel
-    private val musicDatabase = MusicDatabase()
     @Inject
     lateinit var songAdapter: SongAdapter
 
@@ -27,10 +28,9 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         setupRecyclerView(view)
-        val songs = musicDatabase.getLocalSongs(requireContext())
-        songAdapter.songs = songs
+        subscribeToObservers()
         songAdapter.setItemClickListener {
-//            mainViewModel.playOrToggleSong(it)
+            mainViewModel.playOrToggleSong(it)
         }
     }
 
@@ -45,7 +45,9 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs->
                         //display list song to view
-                        songAdapter.songs = songs
+                        songAdapter.songs = songs.filter {
+                            it.isLocal == true
+                        }
                     }
                 }
                 Status.ERROR -> Unit

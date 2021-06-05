@@ -1,6 +1,7 @@
 package com.example.musify.exoplayer
 
 import android.content.Context
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
@@ -8,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.MusicDatabase
 import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.State.*
@@ -25,15 +27,14 @@ class MusicSource { // list of song get from firebase
 
     suspend fun fetchMediaData(context: Context) = withContext(Dispatchers.IO){
         state = STATE_INITIALIZING
-//        val firebaseSongs = musicDatabase.getFirebaseSongs()
-//        Log.d("MusicSource","${firebaseSongs.size}")
-//        val localSongs = musicDatabase.getLocalSongs(context)
-//        val allSong = mutableListOf<Song>()
-//        allSong.addAll(firebaseSongs)
-//        allSong.addAll(localSongs)
-        val allSong = musicDatabase.getFirebaseSongs()
+        val firebaseSongs = musicDatabase.getFirebaseSongs()
+        val localSongs = musicDatabase.getLocalSongs(context)
+        val allSong = mutableListOf<Song>()
+        allSong.addAll(firebaseSongs)
+        allSong.addAll(localSongs)
+        Log.d("MusicSource","${allSong.size}")
         songs = allSong.map { song->
-            MediaMetadataCompat.Builder()
+            Builder()
                 .putString(METADATA_KEY_ARTIST,song.subtitle)
                 .putString(METADATA_KEY_MEDIA_ID,song.mediaId)
                 .putString(METADATA_KEY_TITLE,song.title)
@@ -43,6 +44,7 @@ class MusicSource { // list of song get from firebase
                 .putString(METADATA_KEY_ALBUM_ART_URI,song.imageUrl)
                 .putString(METADATA_KEY_DISPLAY_SUBTITLE,song.subtitle)
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION,song.subtitle)
+                    .putString(IS_LOCAL,song.isLocal.toString())
                 .build()
         }
         state = STATE_INITIALIZED
@@ -59,12 +61,16 @@ class MusicSource { // list of song get from firebase
     }
     //convert to list media item for use in browsing/searching media
     fun asMediaItem() = songs.map { song->
+        val bundle = Bundle()
+        bundle.putString(IS_LOCAL,song.getString(IS_LOCAL))
+        Log.d("MusicSource","${song.description.title} - ${song.getString(IS_LOCAL)}")
         val description = MediaDescriptionCompat.Builder()
                 .setMediaUri(song.getString(METADATA_KEY_MEDIA_URI).toUri())
                 .setTitle(song.description.title)
                 .setSubtitle(song.description.subtitle)
                 .setMediaId(song.description.mediaId)
                 .setIconUri(song.description.iconUri)
+                .setExtras(bundle)
                 .build()
         MediaBrowserCompat.MediaItem(description,FLAG_PLAYABLE)
     }.toMutableList()

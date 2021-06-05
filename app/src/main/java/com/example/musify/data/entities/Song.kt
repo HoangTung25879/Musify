@@ -5,7 +5,8 @@ data class Song(
         val subtitle:String = "",
         val title:String = "",
         val songUrl:String = "",
-        val imageUrl:String = "") {
+        val imageUrl:String = "",
+        val isLocal:Boolean = false) {
 }
 
 //data class Song(

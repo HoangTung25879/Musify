@@ -45,7 +45,9 @@ class FirebaseSongFragment :Fragment(R.layout.fragment_firebase_song){
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs->
                         //display list song to view
-                        songAdapter.songs = songs
+                        songAdapter.songs = songs.filter {
+                            it.isLocal == false
+                        }
                     }
                 }
                 Status.ERROR -> Unit

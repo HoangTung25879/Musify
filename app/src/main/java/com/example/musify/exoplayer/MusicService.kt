@@ -14,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
@@ -39,6 +40,7 @@ class MusicService: MediaBrowserServiceCompat(){
             private set
         private val _audioSessId = MutableLiveData<Int>()
         val audioSessId : LiveData<Int> = _audioSessId
+        var musicServiceInstance: MusicService? = null
     }
 
     @Inject
@@ -67,6 +69,7 @@ class MusicService: MediaBrowserServiceCompat(){
     override fun onCreate() {
         //create a MediaSession and get it’s token.
         super.onCreate()
+        musicServiceInstance = this
         Log.d(SERVICE_TAG,"ONCREATE")
         //coroutine fetch song
         serviceScope.launch {
@@ -167,6 +170,7 @@ class MusicService: MediaBrowserServiceCompat(){
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
         //MEDIA_ROOT_ID is id of a playlist
+        Log.d("MAINVIEWMODEL","ONLOADCHILDREN - $parentId")
         Log.d(SERVICE_TAG,"ONLOADCHILDREN")
         when(parentId){
             MEDIA_ROOT_ID ->{
@@ -193,8 +197,20 @@ class MusicService: MediaBrowserServiceCompat(){
     }
 
     private inner class MusicQueueNavigator:TimelineQueueNavigator(mediaSession){
+        //send description to onMetadataChanged of MediaControllerCallback
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-            return musicSource.songs[windowIndex].description
+            val song = musicSource.songs[windowIndex]
+            val bundle = Bundle()
+            bundle.putString(Constants.IS_LOCAL,song.getString(Constants.IS_LOCAL))
+            val description = MediaDescriptionCompat.Builder()
+                    .setMediaUri(song.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri())
+                    .setTitle(song.description.title)
+                    .setSubtitle(song.description.subtitle)
+                    .setMediaId(song.description.mediaId)
+                    .setIconUri(song.description.iconUri)
+                    .setExtras(bundle)
+                    .build()
+            return description
         }
     }
     private inner class MusicPlaybackPreparer(private val playerPrepared: (MediaMetadataCompat?)->Unit) : MediaSessionConnector.PlaybackPreparer {

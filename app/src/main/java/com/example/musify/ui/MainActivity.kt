@@ -31,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+const val TAG = "MAINACTIVITY"
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -190,7 +191,6 @@ class MainActivity : AppCompatActivity() {
         }
         mainViewModel.currPlayingSong.observe(this) {
             if (it == null) return@observe
-
             currPlayingSong = it.toSong()
             glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)

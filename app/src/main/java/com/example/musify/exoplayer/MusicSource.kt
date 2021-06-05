@@ -1,5 +1,6 @@
 package com.example.musify.exoplayer
 
+import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
@@ -22,10 +23,15 @@ class MusicSource { // list of song get from firebase
     //song list of type MediaMetaDataCompat to use in music service (contain metadata of song)
     var songs = emptyList<MediaMetadataCompat>()
 
-    suspend fun fetchMediaData() = withContext(Dispatchers.IO){
+    suspend fun fetchMediaData(context: Context) = withContext(Dispatchers.IO){
         state = STATE_INITIALIZING
-        Log.d("AAAA","CALL")
-        val allSong = musicDatabase.getAllSongs()
+//        val firebaseSongs = musicDatabase.getFirebaseSongs()
+//        Log.d("MusicSource","${firebaseSongs.size}")
+//        val localSongs = musicDatabase.getLocalSongs(context)
+//        val allSong = mutableListOf<Song>()
+//        allSong.addAll(firebaseSongs)
+//        allSong.addAll(localSongs)
+        val allSong = musicDatabase.getFirebaseSongs()
         songs = allSong.map { song->
             MediaMetadataCompat.Builder()
                 .putString(METADATA_KEY_ARTIST,song.subtitle)

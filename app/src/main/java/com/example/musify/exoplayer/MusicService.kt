@@ -70,7 +70,7 @@ class MusicService: MediaBrowserServiceCompat(){
         Log.d(SERVICE_TAG,"ONCREATE")
         //coroutine fetch song
         serviceScope.launch {
-            musicSource.fetchMediaData()
+            musicSource.fetchMediaData(applicationContext)
         }
         val activityIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let{
             PendingIntent.getActivity(this,0,it,0)

@@ -20,7 +20,7 @@ import java.lang.Exception
 class MusicDatabase {
     private val firestore = FirebaseFirestore.getInstance()
     private val songCollection = firestore.collection(SONG_COLLECTION)
-    suspend fun getAllSongs(): List<Song> {
+    suspend fun getFirebaseSongs(): List<Song> {
         FirebaseFirestore.setLoggingEnabled(true)
         return try {
             songCollection.get().await().toObjects(Song::class.java)
@@ -29,7 +29,7 @@ class MusicDatabase {
         }
     }
 
-    fun getAudioFromDevice(context: Context): List<Song> {
+    fun getLocalSongs(context: Context): List<Song> {
         val songList = mutableListOf<Song>()
         val collection = sdk29AndUp {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)

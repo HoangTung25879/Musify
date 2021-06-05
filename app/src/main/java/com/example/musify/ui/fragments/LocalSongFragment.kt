@@ -27,7 +27,7 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         setupRecyclerView(view)
-        val songs = musicDatabase.getAudioFromDevice(requireContext())
+        val songs = musicDatabase.getLocalSongs(requireContext())
         songAdapter.songs = songs
         songAdapter.setItemClickListener {
 //            mainViewModel.playOrToggleSong(it)

@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.adapter.SongAdapter
 import com.example.musify.data.Status
@@ -28,6 +29,7 @@ class FirebaseSongFragment :Fragment(R.layout.fragment_firebase_song){
         setupRecyclerView(view)
         subscribeToObservers()
         songAdapter.setItemClickListener {
+            Config.isLocalSong = false
             //click on a song is playing we dont want to pause it so no pass toggle true here
             mainViewModel.playOrToggleSong(it)
         }

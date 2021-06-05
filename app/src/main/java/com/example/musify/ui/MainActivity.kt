@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-const val TAG = "MAINACTIVITY"
+private val TAG = "MAINACTIVITY"
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -178,8 +178,10 @@ class MainActivity : AppCompatActivity() {
                             swipeSongAdapter.songs = songs
                             //because if songlist empty and we want to display image from first song app will crash
                             if (songs.isNotEmpty()) {
-                                glide.load((currPlayingSong ?: songs[0]).imageUrl)
-                                    .into(ivCurSongImage)
+//                                glide.load((currPlayingSong ?: songs[0]).imageUrl)
+//                                    .into(ivCurSongImage)
+                                glide.load(R.drawable.music)
+                                        .into(ivCurSongImage)
                             }
                             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
                         }
@@ -192,7 +194,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.currPlayingSong.observe(this) {
             if (it == null) return@observe
             currPlayingSong = it.toSong()
-            glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
+//            glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
+            glide.load(R.drawable.music).into(ivCurSongImage)
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
         }
         //change play pause icon

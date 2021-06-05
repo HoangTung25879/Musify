@@ -136,22 +136,22 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/ivSkipPrevious"
+            android:id="@+id/ivPreviousSong"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/next_previous_button_background"
+            android:background="@drawable/next_previous_button_background_enable"
             android:src="@drawable/ic_skip_previous"
             app:layout_constraintBottom_toBottomOf="@+id/ivPlayPauseDetail"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayPauseDetail"
             app:layout_constraintTop_toTopOf="@+id/ivPlayPauseDetail" />
 
         <ImageView
-            android:id="@+id/ivSkip"
+            android:id="@+id/ivNextSong"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
-            android:background="@drawable/next_previous_button_background"
+            android:background="@drawable/next_previous_button_background_enable"
             android:src="@drawable/ic_skip"
             app:layout_constraintBottom_toBottomOf="@+id/ivPlayPauseDetail"
             app:layout_constraintStart_toEndOf="@+id/ivPlayPauseDetail"

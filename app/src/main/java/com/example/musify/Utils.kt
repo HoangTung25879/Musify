@@ -7,3 +7,6 @@ inline fun <T> sdk29AndUp(onSdk29: () -> T): T? {
         onSdk29()
     } else null
 }
+object Config{
+    var isLocalSong = false
+}

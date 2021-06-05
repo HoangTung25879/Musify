@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
+import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.data.Status.SUCCESS
 import com.example.musify.data.entities.Song
@@ -25,8 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song.*
 import kotlinx.android.synthetic.main.fragment_song.ivPlayPauseDetail
-import kotlinx.android.synthetic.main.fragment_song.ivSkip
-import kotlinx.android.synthetic.main.fragment_song.ivSkipPrevious
+import kotlinx.android.synthetic.main.fragment_song.ivPreviousSong
 import kotlinx.android.synthetic.main.fragment_song.ivSongImage
 import kotlinx.android.synthetic.main.fragment_song.seekBar
 import kotlinx.android.synthetic.main.fragment_song.tvCurTime
@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+private val TAG = "DETAILSONGFRAGMENT"
 @AndroidEntryPoint
 class DetailSongFragment:Fragment(R.layout.fragment_song ) {
     @Inject
@@ -65,11 +66,11 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
                 mainViewModel.playOrToggleSong(it,toggle = true)
             }
         }
-
-        ivSkipPrevious.setOnClickListener{
+        Log.d(TAG,"${Config.isLocalSong}")
+        ivPreviousSong.setOnClickListener{
             mainViewModel.skipToPreviousSong()
         }
-        ivSkip.setOnClickListener {
+        ivNextSong.setOnClickListener {
             mainViewModel.skipToNextSong()
         }
         ivBackBtn.setOnClickListener {
@@ -96,11 +97,32 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
         })
         subscribeToObservers()
     }
-
+    private fun togglePreviousSongBtn(disable:Boolean){
+        if(disable){
+            ivPreviousSong.setOnClickListener(null)
+            ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
+        } else {
+            ivPreviousSong.setOnClickListener{
+                mainViewModel.skipToPreviousSong()
+            }
+            ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
+        }
+    }
+    private fun toggleNextSongBtn(disable: Boolean){
+        if(disable){
+            ivNextSong.setOnClickListener(null)
+            ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
+        } else {
+            ivNextSong.setOnClickListener {
+                mainViewModel.skipToNextSong()
+            }
+            ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
+        }
+    }
     private fun updateTitleAndSongImage(song: Song){
         tvSongName.text = song.title
         tvSongArtist.text = song.subtitle
-        glide.load(song.imageUrl).into(ivSongImage)
+        glide.load(R.drawable.music).into(ivSongImage)
     }
 
     private fun startSpinAnimation(){

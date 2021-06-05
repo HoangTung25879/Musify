@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.adapter.SongAdapter
 import com.example.musify.data.MusicDatabase
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_firebase_song.*
 import javax.inject.Inject
 
-const val TAG = "LOCALSONGFRAGMENT"
+private val TAG = "LOCALSONGFRAGMENT"
 @AndroidEntryPoint
 class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
 
@@ -30,6 +31,7 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
         setupRecyclerView(view)
         subscribeToObservers()
         songAdapter.setItemClickListener {
+            Config.isLocalSong = true
             mainViewModel.playOrToggleSong(it)
         }
     }

@@ -16,7 +16,7 @@ import com.example.musify.data.Constants.NETWORK_ERROR
 import com.example.musify.data.Event
 import com.example.musify.data.Resource
 //class sit between service and fragment(activity)
-const val TAG = "MUSICSERVICECONNECTION"
+private val TAG = "MUSICSERVICECONNECTION"
 class MusicServiceConnection(
         context: Context
 ) {

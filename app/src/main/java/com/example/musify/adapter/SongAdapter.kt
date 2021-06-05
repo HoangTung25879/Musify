@@ -18,7 +18,8 @@ class SongAdapter @Inject constructor(
 
             tvPrimary.text = song.title
             tvSecondary.text = song.subtitle
-            glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
+//            glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
+            glide.load(R.drawable.music).into(ivItemImage)
 
             setOnClickListener{
                 onItemClickListener?.let { click->

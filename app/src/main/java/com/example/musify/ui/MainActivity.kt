@@ -46,21 +46,9 @@ class MainActivity : AppCompatActivity() {
 
     private var playbackState : PlaybackStateCompat? = null
 
-    private var readPermissionGranted = false
-    private var writePermissionGranted = false
-    private var recordPermissionGranted = false
-    private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //
-        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
-            readPermissionGranted = permission[Manifest.permission.READ_EXTERNAL_STORAGE] ?: readPermissionGranted
-            writePermissionGranted = permission[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: writePermissionGranted
-            recordPermissionGranted = permission[Manifest.permission.RECORD_AUDIO] ?: recordPermissionGranted
-        }
-        updateOrRequestPermissions()
         subscribeToObservers()
         vpSong.adapter = swipeSongAdapter
         vpSong.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
@@ -120,52 +108,6 @@ class MainActivity : AppCompatActivity() {
         if (newItemIndex != -1) {
             vpSong.currentItem = newItemIndex
             currPlayingSong = song
-        }
-    }
-
-    private fun updateOrRequestPermissions(){
-        val hasReadPermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-        val hasWritePermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-        val hasRecordPermission = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
-        val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        readPermissionGranted = hasReadPermission
-        writePermissionGranted = hasWritePermission || minSdk29
-        recordPermissionGranted = hasRecordPermission
-        Log.d("PERMISSIONFUNC","Read:$readPermissionGranted - Write:$writePermissionGranted -Record:$recordPermissionGranted")
-        val permissionsToRequest = mutableListOf<String>()
-        if (!writePermissionGranted){
-//            Log.d("PERMISSION","WRITE")
-            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        if (!readPermissionGranted){
-            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-        if (!recordPermissionGranted){
-            permissionsToRequest.add(Manifest.permission.RECORD_AUDIO)
-        }
-        if(permissionsToRequest.isNotEmpty()){
-            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
-        }
-    }
-
-    private fun showDiaglog(){
-        val dialog = AlertDialog.Builder(this)
-        dialog.apply {
-            setMessage("You need to accept all permissions to use this app")
-            setTitle("Permission required")
-            setPositiveButton("Accept") {dialog , _ ->
-                updateOrRequestPermissions()
-            }
-            show()
         }
     }
 

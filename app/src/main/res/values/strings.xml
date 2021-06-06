@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">musify</string>
+    <string name="app_name">Musify</string>
     <string name="notification_channel_name">Music Channel</string>
     <string name="notification_channel_description">current playing music</string>
 </resources>

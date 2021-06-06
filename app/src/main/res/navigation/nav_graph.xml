@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/firebaseSongFragment">
+    app:startDestination="@id/onlineSongFragment">
 
     <fragment
-        android:id="@+id/firebaseSongFragment"
-        android:name="com.example.musify.ui.fragments.FirebaseSongFragment"
-        android:label="FirebaseSongFragment">
+        android:id="@+id/onlineSongFragment"
+        android:name="com.example.musify.ui.fragments.OnlineSongFragment"
+        android:label="OnlineSongFragment">
         <action
-            android:id="@+id/action_firebaseSongFragment_to_localSongFragment"
-            app:destination="@+id/localSongFragment"
+            android:id="@+id/action_onlineSongFragment_to_offlineSongFragment"
+            app:destination="@+id/offlineSongFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -17,17 +17,17 @@
             />
     </fragment>
     <fragment
-        android:id="@+id/localSongFragment"
-        android:name="com.example.musify.ui.fragments.LocalSongFragment"
-        android:label="LocalSongFragment"
+        android:id="@+id/offlineSongFragment"
+        android:name="com.example.musify.ui.fragments.OfflineSongFragment"
+        android:label="OfflineSongFragment"
         >
         <action
-            android:id="@+id/action_localSongFragment_to_firebaseSongFragment"
+            android:id="@+id/action_offlineSongFragment_to_onlineSongFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
-            app:destination="@id/firebaseSongFragment"
+            app:destination="@id/onlineSongFragment"
             />
     </fragment>
     <fragment

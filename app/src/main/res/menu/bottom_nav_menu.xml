@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/firebase_song"
+        android:id="@+id/online_song"
         android:icon="@drawable/ic_firebase"
-        android:title="Firebase Song"
+        android:title="Online Songs"
         />
     <item
-        android:id="@+id/local_song"
+        android:id="@+id/offline_song"
         android:icon="@drawable/ic_bai_hat"
-        android:title="Local Song"
+        android:title="Offline Songs"
         />
 </menu>

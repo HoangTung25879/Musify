@@ -1,20 +1,9 @@
 package com.example.musify.ui
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -77,13 +66,13 @@ class MainActivity : AppCompatActivity() {
         navHostFragment.findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
                 R.id.detailSongFragment -> hideBottomBar()
-                R.id.firebaseSongFragment -> showBottomBar()
+                R.id.onlineSongFragment -> showBottomBar()
                 else -> showBottomBar()
             }
         }
         bottom_navigation.setOnNavigationItemSelectedListener {
-            if (it.itemId == R.id.firebase_song) navHostFragment.findNavController().navigate(R.id.action_localSongFragment_to_firebaseSongFragment)
-            if (it.itemId == R.id.local_song) navHostFragment.findNavController().navigate(R.id.action_firebaseSongFragment_to_localSongFragment)
+            if (it.itemId == R.id.online_song) navHostFragment.findNavController().navigate(R.id.action_offlineSongFragment_to_onlineSongFragment)
+            if (it.itemId == R.id.offline_song) navHostFragment.findNavController().navigate(R.id.action_onlineSongFragment_to_offlineSongFragment)
             true
         }
     }

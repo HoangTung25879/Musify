@@ -1,7 +1,6 @@
 package com.example.musify.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -10,19 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.adapter.SongAdapter
-import com.example.musify.data.MusicDatabase
 import com.example.musify.data.Status
 import com.example.musify.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_firebase_song.*
-import kotlinx.android.synthetic.main.fragment_firebase_song.allSongsProgressBar
-import kotlinx.android.synthetic.main.fragment_firebase_song.rvAllSongs
-import kotlinx.android.synthetic.main.fragment_local_song.*
+import kotlinx.android.synthetic.main.fragment_offline_song.*
 import javax.inject.Inject
 
-private val TAG = "LOCALSONGFRAGMENT"
+private val TAG = "OFFLINESONGFRAGMENT"
 @AndroidEntryPoint
-class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
+class OfflineSongFragment : Fragment(R.layout.fragment_offline_song) {
 
     lateinit var mainViewModel: MainViewModel
     @Inject

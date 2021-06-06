@@ -24,8 +24,27 @@ class MusicSource { // list of song get from firebase
     private val musicDatabase = MusicDatabase()
     //song list of type MediaMetaDataCompat to use in music service (contain metadata of song)
     var songs = emptyList<MediaMetadataCompat>()
+    private val onReadyListeners = mutableListOf<(Boolean)->Unit>()
+    private var state:State = STATE_CREATED
+        set(value) {
+            //setter check if we set value to INITIALIZED OR ERROR
+            // to sum up this block mean to check if state is initialized
+            if (value == STATE_INITIALIZED || value == STATE_ERROR){
+                // synchronized mean what happen in block {} can only be access in same thread
+                synchronized(onReadyListeners){
+                    //just assign value
+                    field = value
+                    //loop over lambda fun pass boolean(check state == Initialized)
+                    onReadyListeners.forEach { listener->
+                        listener(state == STATE_INITIALIZED)
+                    }
+                }
+            } else {
+                field = value
+            }
+        }
 
-    suspend fun fetchMediaData(context: Context) = withContext(Dispatchers.IO){
+    suspend fun fetchMediaData(context: Context) = withContext(Dispatchers.Main){
         state = STATE_INITIALIZING
         val firebaseSongs = musicDatabase.getFirebaseSongs()
         val localSongs = musicDatabase.getLocalSongs(context)
@@ -75,26 +94,6 @@ class MusicSource { // list of song get from firebase
         MediaBrowserCompat.MediaItem(description,FLAG_PLAYABLE)
     }.toMutableList()
 
-    private val onReadyListeners = mutableListOf<(Boolean)->Unit>()
-
-    private var state:State = STATE_CREATED
-        set(value) {
-            //setter check if we set value to INITIALIZED OR ERROR
-            // to sum up this block mean to check if state is initialized
-            if (value == STATE_INITIALIZED || value == STATE_ERROR){
-                // synchronized mean what happen in block {} can only be access in same thread
-                synchronized(onReadyListeners){
-                    //just assign value
-                    field = value
-                    //loop over lambda fun pass boolean(check state == Initialized)
-                    onReadyListeners.forEach { listener->
-                        listener(state == STATE_INITIALIZED)
-                    }
-                }
-            } else {
-                field = value
-            }
-        }
     fun whenReady(action:(Boolean)->Unit):Boolean{
         if(state == STATE_CREATED || state == STATE_INITIALIZING){
             //not ready

@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
         animationSplash()
-        if (checkAllPermission()){
+        if (checkAllPermission(this)){
             goToMainActivity()
         } else {
             ActivityCompat.requestPermissions(this,PERMISSIONS,REQUEST_CODE)
@@ -47,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_APPSETTING){
-            if (checkAllPermission()){
+            if (checkAllPermission(this)){
                 goToMainActivity()
             } else {
                 showDiaglog()

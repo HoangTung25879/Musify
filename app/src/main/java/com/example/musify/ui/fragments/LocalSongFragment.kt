@@ -15,6 +15,9 @@ import com.example.musify.data.Status
 import com.example.musify.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_firebase_song.*
+import kotlinx.android.synthetic.main.fragment_firebase_song.allSongsProgressBar
+import kotlinx.android.synthetic.main.fragment_firebase_song.rvAllSongs
+import kotlinx.android.synthetic.main.fragment_local_song.*
 import javax.inject.Inject
 
 private val TAG = "LOCALSONGFRAGMENT"
@@ -49,6 +52,11 @@ class LocalSongFragment : Fragment(R.layout.fragment_local_song) {
                         //display list song to view
                         songAdapter.songs = songs.filter {
                             it.isLocal == true
+                        }
+                        if(songAdapter.itemCount == 0){
+                            tvEmptyOffline.isVisible = false
+                        } else {
+                            tvEmptyOffline.visibility = View.GONE
                         }
                     }
                 }

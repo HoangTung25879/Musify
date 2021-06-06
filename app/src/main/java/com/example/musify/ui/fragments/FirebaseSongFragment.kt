@@ -1,6 +1,7 @@
 package com.example.musify.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_firebase_song.*
 import javax.inject.Inject
 
+private const val TAG = "FIREBASESONGFRAGMENT"
 @AndroidEntryPoint
 class FirebaseSongFragment :Fragment(R.layout.fragment_firebase_song){
 
@@ -49,6 +51,11 @@ class FirebaseSongFragment :Fragment(R.layout.fragment_firebase_song){
                         //display list song to view
                         songAdapter.songs = songs.filter {
                             it.isLocal == false
+                        }
+                        if(songAdapter.itemCount == 0){
+                            tvEmptyOnline.isVisible = false
+                        } else {
+                            tvEmptyOnline.visibility = View.GONE
                         }
                     }
                 }

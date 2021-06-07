@@ -11,7 +11,7 @@
         android:id="@+id/flFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/vpSong"
+        app:layout_constraintBottom_toTopOf="@+id/viewSong"
         app:layout_constraintTop_toTopOf="parent">
 
         <fragment
@@ -24,33 +24,45 @@
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/ivCurSongImage"
-        android:layout_width="56dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewSong"
+        android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/vpSong"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/vpSong" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vpSong"
-        android:layout_width="299dp"
-        android:layout_height="56dp"
-        android:background="@color/colorBackground"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toStartOf="@+id/ivPlayPause"
-        app:layout_constraintStart_toEndOf="@+id/ivCurSongImage" />
-
-    <ImageView
-        android:id="@+id/ivPlayPause"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/colorBackground"
-        android:src="@drawable/ic_play"
-        app:layout_constraintBottom_toBottomOf="@+id/vpSong"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/vpSong" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/ivCurSongImage"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/vpSong"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vpSong" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpSong"
+            android:layout_width="299dp"
+            android:layout_height="56dp"
+            android:background="@color/colorBackground"
+            app:layout_constraintBottom_toBottomOf="@+id/viewSong"
+            app:layout_constraintEnd_toStartOf="@+id/ivPlayPause"
+            app:layout_constraintStart_toEndOf="@+id/ivCurSongImage" />
+
+        <ImageView
+            android:id="@+id/ivPlayPause"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@color/colorBackground"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@+id/vpSong"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vpSong" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

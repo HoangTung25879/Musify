@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musify.Config
 import com.example.musify.R
-import com.example.musify.adapter.SongAdapter
+import com.example.musify.adapter.BaseSongAdapter
+import com.example.musify.adapter.OfflineSongAdapter
 import com.example.musify.data.Status
+import com.example.musify.data.entities.Song
 import com.example.musify.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_offline_song.*
@@ -21,16 +23,17 @@ class OfflineSongFragment : Fragment(R.layout.fragment_offline_song) {
 
     lateinit var mainViewModel: MainViewModel
     @Inject
-    lateinit var songAdapter: SongAdapter
+    lateinit var songAdapter: OfflineSongAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         setupRecyclerView(view)
         subscribeToObservers()
-        songAdapter.setItemClickListener {
-            Config.isLocalSong = true
-            mainViewModel.playOrToggleSong(it)
+        songAdapter.listener = object : BaseSongAdapter.SongAdapterListener{
+            override fun onItemClicked(song: Song) {
+                mainViewModel.playOrToggleSong(song)
+            }
         }
     }
 

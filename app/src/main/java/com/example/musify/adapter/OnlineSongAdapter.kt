@@ -8,11 +8,11 @@ import com.example.musify.R
 import kotlinx.android.synthetic.main.list_item.view.*
 import javax.inject.Inject
 
-private const val TAG = "SONGADAPTER"
-class SongAdapter @Inject constructor(
+private const val TAG = "ONLINESONGADAPTER"
+class OnlineSongAdapter @Inject constructor(
     private val glide : RequestManager
 ):BaseSongAdapter(R.layout.list_item) {
-
+    private var currentSelectIndex : Int = -1
     override val differ = AsyncListDiffer(this,SongAdapterDiffUtilCallback)
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
@@ -24,12 +24,14 @@ class SongAdapter @Inject constructor(
 //            glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
             glide.load(R.drawable.music).into(ivItemImage)
             setOnClickListener{
-                Config.isInitial = false
-                onItemClickListener?.let { click->
-                    click(song)
-                }
+                listener?.onItemClicked(song)
             }
         }
+    }
+
+    fun toggleSelection(position: Int){
+        currentSelectIndex = position
+        notifyItemChanged(position)
     }
 
 

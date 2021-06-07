@@ -12,6 +12,8 @@ abstract class BaseSongAdapter(
         private val layoutId: Int,
 ) : RecyclerView.Adapter<BaseSongAdapter.SongViewHolder>() {
 
+    var listener: SongAdapterListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(layoutId,parent,false)
@@ -22,11 +24,6 @@ abstract class BaseSongAdapter(
         return songs.size
     }
 
-    protected var onItemClickListener: ((Song)->Unit)? = null
-
-    fun setItemClickListener(listener: (Song)->Unit){
-        onItemClickListener = listener
-    }
     class SongViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
     }
@@ -43,4 +40,8 @@ abstract class BaseSongAdapter(
     var songs : List<Song>
         get() = differ.currentList
         set(value) = differ.submitList(value)
+
+    interface SongAdapterListener{
+        fun onItemClicked(song:Song)
+    }
 }

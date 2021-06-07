@@ -66,7 +66,6 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
                 mainViewModel.playOrToggleSong(it,toggle = true)
             }
         }
-        Log.d(TAG,"${Config.isLocalSong}")
         ivPreviousSong.setOnClickListener{
             mainViewModel.skipToPreviousSong()
         }

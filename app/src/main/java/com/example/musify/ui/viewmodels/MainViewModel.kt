@@ -40,12 +40,12 @@ class MainViewModel @ViewModelInject constructor(
                     val isLocal = bundle?.getString(IS_LOCAL).toBoolean()
                     Log.d("MAINVIEWMODEL","${it.mediaId!!} - ${it.description.title} - ${it.description.subtitle} - ${it.description.mediaUri} - ${isLocal}")
                     Song(
-                        it.mediaId!!,
-                        it.description.title.toString(),
-                        it.description.subtitle.toString(),
-                        it.description.mediaUri.toString(),
-                        it.description.iconUri.toString(),
-                            isLocal = isLocal
+                        mediaId = it.mediaId!!,
+                        title = it.description.title.toString(),
+                        subtitle = it.description.subtitle.toString(),
+                        songUrl = it.description.mediaUri.toString(),
+                        imageUrl = it.description.iconUri.toString(),
+                        isLocal = isLocal
                     )
                 }
                 _mediaItems.postValue(Resource.success(items))

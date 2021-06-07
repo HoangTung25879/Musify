@@ -17,6 +17,7 @@ class SwipeSongAdapter :BaseSongAdapter(R.layout.swipe_item) {
             tvPrimary.text = text
 
             setOnClickListener{
+
                 onItemClickListener?.let { click->
                     click(song)
                 }

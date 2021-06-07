@@ -1,41 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp"
+    app:strokeColor="@color/colorSeekbar"
+    app:strokeWidth="2dp"
+    >
 
-    <ImageView
-        android:id="@+id/ivItemImage"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvPrimary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center|left"
-        android:text="Playlist Title"
-        android:layout_marginTop="8dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivItemImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivItemImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/music"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvSecondary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="100 Songs"
-        android:textSize="14sp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivItemImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvPrimary" />
+        <TextView
+            android:id="@+id/tvPrimary"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Plastic Love dsadasdasdasdasdasdasd"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/ivItemImage"
+            app:layout_constraintTop_toTopOf="@+id/ivItemImage" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvSecondary"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:text="Mariya Takeuchi"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="2dp"
+            app:layout_constraintStart_toStartOf="@+id/tvPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/tvPrimary" />
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="03:00"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSecondary"
+            app:layout_constraintStart_toEndOf="@+id/tvSecondary" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/ivIsPlaying"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            app:indicatorColor="@color/colorSeekbar"
+            app:indicatorName="LineScalePulseOutIndicator"
+            app:layout_constraintStart_toEndOf="@+id/tvPrimary"
+            app:layout_constraintTop_toTopOf="@+id/tvPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

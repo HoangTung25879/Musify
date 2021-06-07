@@ -110,6 +110,9 @@ dependencies {
 
     //AudioVisualizer
     implementation 'com.github.bogerchan:Nier-Visualizer:v0.1.3'
+
+    //AVLOADING
+    implementation 'com.wang.avi:library:2.1.3'
 }
 repositories {
     mavenCentral()

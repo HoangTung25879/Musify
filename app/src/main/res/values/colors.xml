@@ -20,4 +20,7 @@
     <color name="colorBackground">#F3F3F3</color>
     <color name="colorStroke">#BDBDBD</color>
     <color name="colorHint">#ECECEC</color>
+    <color name="colorListItem">#c3a9f6</color>
+    <color name="colorListItem1">#a3b4fd</color>
+    <color name="colorListItem2">#a4d5fe</color>
 </resources>

@@ -10,12 +10,12 @@ import com.example.musify.data.entities.Song
 fun MediaMetadataCompat.toSong():Song?{
     return description?.let {
         Song(
-            it.mediaId ?: "",
-            it.title.toString(),
-            it.subtitle.toString(),
-            it.mediaUri.toString(),
-            it.iconUri.toString(),
-                isLocal =  getString(IS_LOCAL).toBoolean()
+            mediaId = it.mediaId ?: "",
+            title = it.title.toString(),
+            subtitle = it.subtitle.toString(),
+            songUrl =  it.mediaUri.toString(),
+            imageUrl =  it.iconUri.toString(),
+            isLocal =  getString(IS_LOCAL).toBoolean()
         )
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
+import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.data.Status.*
@@ -65,9 +66,11 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
-                R.id.detailSongFragment -> hideBottomBar()
-                R.id.onlineSongFragment -> showBottomBar()
-                else -> showBottomBar()
+                R.id.detailSongFragment -> {
+                    hideBottomBar()
+                    bottom_navigation.isVisible = false
+                }
+                else -> if(Config.isInitial) hideBottomBar() else showBottomBar()
             }
         }
         bottom_navigation.setOnNavigationItemSelectedListener {
@@ -81,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         ivCurSongImage.isVisible = false
         vpSong.isVisible = false
         ivPlayPause.isVisible = false
-        bottom_navigation.isVisible = false
     }
 
     private fun showBottomBar(){
@@ -125,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.currPlayingSong.observe(this) {
             if (it == null) return@observe
             currPlayingSong = it.toSong()
+            if(Config.isInitial == false){
+                showBottomBar()
+            }
 //            glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             glide.load(R.drawable.music).into(ivCurSongImage)
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)

@@ -13,6 +13,7 @@ inline fun <T> sdk29AndUp(onSdk29: () -> T): T? {
 }
 object Config{
     var isLocalSong = false
+    var isInitial = true // for show hide vpSong
 }
 fun checkAllPermission(context: Context):Boolean{
     var result = false

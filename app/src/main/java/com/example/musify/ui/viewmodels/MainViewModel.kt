@@ -45,7 +45,8 @@ class MainViewModel @ViewModelInject constructor(
                         subtitle = it.description.subtitle.toString(),
                         songUrl = it.description.mediaUri.toString(),
                         imageUrl = it.description.iconUri.toString(),
-                        isLocal = isLocal
+                        isLocal = isLocal,
+                        isPlaying = false
                     )
                 }
                 _mediaItems.postValue(Resource.success(items))

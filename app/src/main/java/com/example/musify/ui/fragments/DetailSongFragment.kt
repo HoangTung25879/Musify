@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +22,7 @@ import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.data.Status.SUCCESS
 import com.example.musify.data.entities.Song
+import com.example.musify.databinding.FragmentSongBinding
 import com.example.musify.exoplayer.*
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.example.musify.ui.viewmodels.SongViewModel
@@ -40,11 +44,12 @@ import javax.inject.Inject
 
 private val TAG = "DETAILSONGFRAGMENT"
 @AndroidEntryPoint
-class DetailSongFragment:Fragment(R.layout.fragment_song ) {
+class DetailSongFragment:Fragment() {
     @Inject
     lateinit var glide: RequestManager
 
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var binding: FragmentSongBinding
     private val songViewModel: SongViewModel by viewModels()
 
     private var currPlayingSong: Song? = null
@@ -55,85 +60,105 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
 
     private var runnable: Runnable? = null
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        setupViewModel(inflater,container)
+            val view = binding.root
+            return view
+    }
+    private fun setupViewModel(inflater: LayoutInflater,container: ViewGroup?){
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_song,container,false)
+        binding.lifecycleOwner = this
+        binding.detailSongViewModel = mainViewModel
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         //requireActivity because this viewmodel is bound to activity lifecycle not fragment lifecycle
-        songVisualizer.setZOrderOnTop(true)
-        songVisualizer.holder.setFormat(PixelFormat.TRANSLUCENT)
-        ivPlayPauseDetail.setOnClickListener{
-            currPlayingSong?.let {
-                mainViewModel.playOrToggleSong(it,toggle = true)
-            }
-        }
-        ivPreviousSong.setOnClickListener{
-            mainViewModel.skipToPreviousSong()
-        }
-        ivNextSong.setOnClickListener {
-            mainViewModel.skipToNextSong()
-        }
-        ivBackBtn.setOnClickListener {
-            navHostFragment.findNavController().popBackStack()
-        }
-
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser){
-                    setCurrPlayerTimeToTextView(progress.toLong())
+        binding.apply {
+            songVisualizer.setZOrderOnTop(true)
+            songVisualizer.holder.setFormat(PixelFormat.TRANSLUCENT)
+            ivPlayPauseDetail.setOnClickListener{
+                currPlayingSong?.let {
+                    mainViewModel.playOrToggleSong(it,toggle = true)
                 }
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                shouldUpdateSeekbar = false
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                seekBar?.let {
-                    mainViewModel.seekTo(it.progress.toLong())
-                    shouldUpdateSeekbar = true
-                }
-            }
-        })
-        subscribeToObservers()
-    }
-    private fun togglePreviousSongBtn(disable:Boolean){
-        if(disable){
-            ivPreviousSong.setOnClickListener(null)
-            ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
-        } else {
             ivPreviousSong.setOnClickListener{
                 mainViewModel.skipToPreviousSong()
             }
-            ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
-        }
-    }
-    private fun toggleNextSongBtn(disable: Boolean){
-        if(disable){
-            ivNextSong.setOnClickListener(null)
-            ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
-        } else {
             ivNextSong.setOnClickListener {
                 mainViewModel.skipToNextSong()
             }
-            ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
+            ivBackBtn.setOnClickListener {
+                navHostFragment.findNavController().popBackStack()
+            }
+            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    if(fromUser){
+                        setCurrPlayerTimeToTextView(progress.toLong())
+                    }
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    shouldUpdateSeekbar = false
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    seekBar?.let {
+                        mainViewModel.seekTo(it.progress.toLong())
+                        shouldUpdateSeekbar = true
+                    }
+                }
+            })
+        }
+        subscribeToObservers()
+    }
+    private fun togglePreviousSongBtn(disable:Boolean){
+        binding.apply {
+            if(disable){
+                ivPreviousSong.setOnClickListener(null)
+                ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
+            } else {
+                ivPreviousSong.setOnClickListener{
+                    mainViewModel.skipToPreviousSong()
+                }
+                ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
+            }
+        }
+    }
+    private fun toggleNextSongBtn(disable: Boolean){
+        binding.apply {
+            if(disable){
+                ivNextSong.setOnClickListener(null)
+                ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
+            } else {
+                ivNextSong.setOnClickListener {
+                    mainViewModel.skipToNextSong()
+                }
+                ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
+            }
         }
     }
     private fun updateTitleAndSongImage(song: Song){
-        tvSongName.text = song.title
-        tvSongArtist.text = song.subtitle
-        glide.load(R.drawable.music).into(ivSongImage)
+        binding.apply {
+            tvSongName.text = song.title
+            tvSongArtist.text = song.subtitle
+            glide.load(R.drawable.music).into(ivSongImage)
+        }
     }
 
     private fun startSpinAnimation(){
         runnable = object : Runnable{
             override fun run() {
-                ivSongImage?.let {
-                    it.animate().rotationBy(360f).setDuration(10000)
+                binding.ivSongImage
+                    .animate().rotationBy(360f).setDuration(10000)
                     .setInterpolator(LinearInterpolator()).start()
-                }
             }
         }
-        ivSongImage.animate().rotationBy(360f).withEndAction(runnable).setDuration(10000)
+        binding.ivSongImage.animate().rotationBy(360f).withEndAction(runnable).setDuration(10000)
             .setInterpolator(LinearInterpolator()).start()
     }
 
@@ -142,7 +167,7 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
         runnable = null
     }
     private fun stopSpinAnimation(){
-        ivSongImage.animate().cancel()
+        binding.ivSongImage.animate().cancel()
     }
 
     private fun subscribeToObservers(){
@@ -168,7 +193,7 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
         }
         mainViewModel.playbackState.observe(viewLifecycleOwner){
             playbackState = it
-            ivPlayPauseDetail.setImageResource(
+            binding.ivPlayPauseDetail.setImageResource(
                 if(playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play
             )
             when(it?.state){
@@ -176,17 +201,21 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
                 STATE_PAUSED -> stopSpinAnimation()
                 else -> Unit
             }
-            seekBar.progress = it?.position?.toInt() ?: 0
+            binding.seekBar.progress = it?.position?.toInt() ?: 0
         }
         songViewModel.currSongDuration.observe(viewLifecycleOwner){
-            seekBar.max = it.toInt()
-            val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-            tvSongDuration.text = dateFormat.format(it)
+            binding.apply {
+                seekBar.max = it.toInt()
+                val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+                tvSongDuration.text = dateFormat.format(it)
+            }
         }
         songViewModel.currPlayerPosition.observe(viewLifecycleOwner){
             if(shouldUpdateSeekbar){
-                seekBar.progress = it.toInt()
-                setCurrPlayerTimeToTextView(it)
+                binding.apply {
+                    seekBar.progress = it.toInt()
+                    setCurrPlayerTimeToTextView(it)
+                }
             }
         }
 
@@ -201,7 +230,7 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
         mVisualizerManager = NierVisualizerManager().apply {
             init(audioSessionId)
         }
-        mVisualizerManager?.start(songVisualizer,arrayOf(CircleBarRenderer(
+        mVisualizerManager?.start(binding.songVisualizer,arrayOf(CircleBarRenderer(
             paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 strokeWidth = 15f
                 color = Color.parseColor("#70DBF0")
@@ -217,6 +246,6 @@ class DetailSongFragment:Fragment(R.layout.fragment_song ) {
     }
     private fun setCurrPlayerTimeToTextView(ms:Long){
         val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-        tvCurTime.text = dateFormat.format(ms)
+        binding.tvCurTime.text = dateFormat.format(ms)
     }
 }

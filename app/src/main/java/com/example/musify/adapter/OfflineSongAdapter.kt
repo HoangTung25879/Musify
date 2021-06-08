@@ -1,37 +1,69 @@
 package com.example.musify.adapter
 
-import android.util.Log
-import androidx.recyclerview.widget.AsyncListDiffer
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.example.musify.Config
 import com.example.musify.R
-import kotlinx.android.synthetic.main.list_item.view.*
+import com.example.musify.data.entities.Song
+import com.wang.avi.AVLoadingIndicatorView
+import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
 
 private const val TAG = "OFFLINESONGADAPTER"
-class OfflineSongAdapter @Inject constructor(
+class OfflineSongAdapter  @Inject constructor(
     private val glide : RequestManager
-):BaseSongAdapter(R.layout.list_item) {
-    private var itemPosition:Int? = null
-    override val differ = AsyncListDiffer(this,SongAdapterDiffUtilCallback)
+) : ListAdapter<Song, OfflineSongAdapter.SongViewHolder>(SongAdapterDiffUtilCallback()){
+
+    var listener: SongAdapterListener? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.list_item,parent,false)
+        return SongViewHolder(view)
+    }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        val song = songs[position]
-        holder.itemView.apply{
-            tvPrimary.text = song.title
-            tvSecondary.text = song.subtitle
-            ivIsPlaying.hide()
-//            glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
-            glide.load(R.drawable.music).into(ivItemImage)
-            setOnClickListener{
+        val song = getItem(position)
+        holder.bind(song,glide,listener)
+    }
+
+    class SongViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
+
+
+        private val tvName = itemView.findViewById<TextView>(R.id.tvSongName)
+        private val tvArtist = itemView.findViewById<TextView>(R.id.tvSongArtist)
+        private val ivIsPlaying = itemView.findViewById<AVLoadingIndicatorView>(R.id.ivIsPlaying)
+        private val ivSongImage = itemView.findViewById<CircleImageView>(R.id.ivItemImage)
+
+
+        fun bind(song: Song,glide: RequestManager,listener: SongAdapterListener?){
+            itemView.setOnClickListener {
                 listener?.onItemClicked(song)
             }
+            tvName.text = song.title
+            tvArtist.text = song.subtitle
+            if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
+            //glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
+            glide.load(R.drawable.music).into(ivSongImage)
         }
     }
 
-    fun updateItemView(position: Int){
-        itemPosition = position
-        notifyDataSetChanged()
+    class SongAdapterDiffUtilCallback: DiffUtil.ItemCallback<Song>(){
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+            return oldItem.mediaId == newItem.mediaId
+        }
+
+        override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+            return oldItem == newItem
+        }
     }
 
+    interface SongAdapterListener{
+        fun onItemClicked(song:Song)
+    }
 }

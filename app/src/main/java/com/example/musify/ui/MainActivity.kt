@@ -11,7 +11,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.example.musify.Config
 import com.example.musify.R
-import com.example.musify.adapter.BaseSongAdapter
 import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
@@ -49,9 +48,9 @@ class MainActivity : AppCompatActivity() {
                 //if a song is playing and switch song we want to play it
                 //if a song is pause and switch song we update current playing song
                 if (playbackState?.isPlaying == true){
-                    mainViewModel.playOrToggleSong(swipeSongAdapter.songs[position])
+                    mainViewModel.playOrToggleSong(swipeSongAdapter.getSong(position))
                 } else {
-                    currPlayingSong = swipeSongAdapter.songs[position]
+                    currPlayingSong = swipeSongAdapter.getSong(position)
                 }
             }
         })
@@ -61,8 +60,8 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.playOrToggleSong(it,toggle = true)
             }
         }
-        
-        swipeSongAdapter.listener = object : BaseSongAdapter.SongAdapterListener{
+
+        swipeSongAdapter.listener = object : SwipeSongAdapter.SongAdapterListener{
             override fun onItemClicked(song: Song) {
                 navHostFragment.findNavController().navigate(R.id.globalActionToSongFragment)
             }
@@ -96,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchViewPagerToCurrentSong(song: Song) {
-        val newItemIndex = swipeSongAdapter.songs.indexOf(song)
+        val newItemIndex = swipeSongAdapter.currentList.indexOf(song)
         //if song dont exist in list will return -1
         if (newItemIndex != -1) {
             Log.d(TAG,"${song.title}")
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         viewSong.isVisible = true
                         Config.isInitial = false
                         result.data?.let { songs ->
-                            swipeSongAdapter.songs = songs
+                            swipeSongAdapter.submitList(songs)
                             //because if songlist empty and we want to display image from first song app will crash
                             if (songs.isNotEmpty()) {
 //                                glide.load((currPlayingSong ?: songs[0]).imageUrl)

@@ -1,25 +1,57 @@
 package com.example.musify.adapter
 
-import androidx.recyclerview.widget.AsyncListDiffer
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.musify.R
-import kotlinx.android.synthetic.main.swipe_item.view.*
+import com.example.musify.data.entities.Song
 
-//Declare provider in AppModule or declare an empty constructor like this for dagger-hilt
-//class SwipeSongAdapter @Inject constructor() :BaseSongAdapter(R.layout.swipe_item) {
-class SwipeSongAdapter :BaseSongAdapter(R.layout.swipe_item) {
+class SwipeSongAdapter : ListAdapter<Song, SwipeSongAdapter.SongViewHolder>(
+    SongAdapterDiffUtilCallback()
+) {
 
-    override val differ = AsyncListDiffer(this,SongAdapterDiffUtilCallback)
+    var listener: SongAdapterListener? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.swipe_item,parent,false)
+        return SongViewHolder(view)
+    }
+
+    fun getSong(position: Int):Song{
+        return getItem(position)
+    }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        val song = songs[position]
-        holder.itemView.apply{
-            val text = "${song.title} - ${song.subtitle}"
-            tvPrimary.text = text
+        val song = getItem(position)
+        holder.bind(song,listener)
+    }
 
-            setOnClickListener{
+    class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvTitle = itemView.findViewById<TextView>(R.id.tvPrimary)
+        fun bind(song: Song,listener: SongAdapterListener?){
+            val text = "${song.title} - ${song.subtitle}"
+            tvTitle.text = text
+            itemView.setOnClickListener {
                 listener?.onItemClicked(song)
             }
         }
     }
+    class SongAdapterDiffUtilCallback: DiffUtil.ItemCallback<Song>(){
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+            return oldItem.mediaId == newItem.mediaId
+        }
 
+        override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    interface SongAdapterListener{
+        fun onItemClicked(song:Song)
+    }
 }

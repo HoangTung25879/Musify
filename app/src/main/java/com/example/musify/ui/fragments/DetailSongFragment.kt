@@ -204,6 +204,7 @@ class DetailSongFragment:Fragment() {
             binding.seekBar.progress = it?.position?.toInt() ?: 0
         }
         songViewModel.currSongDuration.observe(viewLifecycleOwner){
+            Log.d("MUSICDATABASE","$it")
             binding.apply {
                 seekBar.max = it.toInt()
                 val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())

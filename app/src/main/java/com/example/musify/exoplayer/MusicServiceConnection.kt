@@ -11,7 +11,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.Constants.NETWORK_ERROR
 import com.example.musify.data.Event
 import com.example.musify.data.Resource

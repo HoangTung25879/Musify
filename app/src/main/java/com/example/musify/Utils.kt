@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import java.text.SimpleDateFormat
+import java.util.*
 
 inline fun <T> sdk29AndUp(onSdk29: () -> T): T? {
     return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -40,4 +42,8 @@ fun checkReadPermission(context: Context) : Boolean{
         result = true
     }
     return result
+}
+fun durationFormat(duration:String):String{
+    val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+    return dateFormat.format(duration.toLong())
 }

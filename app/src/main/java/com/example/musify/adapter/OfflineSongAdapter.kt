@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.musify.R
 import com.example.musify.data.entities.Song
+import com.example.musify.durationFormat
 import com.wang.avi.AVLoadingIndicatorView
 import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
@@ -37,6 +38,7 @@ class OfflineSongAdapter  @Inject constructor(
 
         private val tvName = itemView.findViewById<TextView>(R.id.tvSongName)
         private val tvArtist = itemView.findViewById<TextView>(R.id.tvSongArtist)
+        private val tvDuration = itemView.findViewById<TextView>(R.id.tvSongDuration)
         private val ivIsPlaying = itemView.findViewById<AVLoadingIndicatorView>(R.id.ivIsPlaying)
         private val ivSongImage = itemView.findViewById<CircleImageView>(R.id.ivItemImage)
 
@@ -47,6 +49,7 @@ class OfflineSongAdapter  @Inject constructor(
             }
             tvName.text = song.title
             tvArtist.text = song.subtitle
+            tvDuration.text = durationFormat(song.duration)
             if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
             //glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
             glide.load(R.drawable.music).into(ivSongImage)

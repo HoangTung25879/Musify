@@ -9,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.musify.data.Constants.DURATION
 import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.MusicDatabase
 import com.example.musify.data.entities.Song
@@ -63,6 +64,7 @@ class MusicSource { // list of song get from firebase
                 .putString(METADATA_KEY_ALBUM_ART_URI,song.imageUrl)
                 .putString(METADATA_KEY_DISPLAY_SUBTITLE,song.subtitle)
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION,song.subtitle)
+                .putString(DURATION,song.duration)
                     .putString(IS_LOCAL,song.isLocal.toString())
                 .build()
         }
@@ -82,7 +84,7 @@ class MusicSource { // list of song get from firebase
     fun asMediaItem() = songs.map { song->
         val bundle = Bundle()
         bundle.putString(IS_LOCAL,song.getString(IS_LOCAL))
-        Log.d("MusicSource","${song.description.title} - ${song.getString(IS_LOCAL)}")
+        bundle.putString(DURATION,song.getString(DURATION))
         val description = MediaDescriptionCompat.Builder()
                 .setMediaUri(song.getString(METADATA_KEY_MEDIA_URI).toUri())
                 .setTitle(song.description.title)

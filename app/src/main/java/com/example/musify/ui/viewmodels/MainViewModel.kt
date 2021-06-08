@@ -8,6 +8,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.musify.data.Constants.DURATION
 import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Resource
@@ -38,6 +39,7 @@ class MainViewModel @ViewModelInject constructor(
                 val items = children.map {
                     val bundle = it.description.extras
                     val isLocal = bundle?.getString(IS_LOCAL).toBoolean()
+                    val duration = bundle?.getString(DURATION)
                     Log.d("MAINVIEWMODEL","${it.mediaId!!} - ${it.description.title} - ${it.description.subtitle} - ${it.description.mediaUri} - ${isLocal}")
                     Song(
                         mediaId = it.mediaId!!,
@@ -46,7 +48,8 @@ class MainViewModel @ViewModelInject constructor(
                         songUrl = it.description.mediaUri.toString(),
                         imageUrl = it.description.iconUri.toString(),
                         isLocal = isLocal,
-                        isPlaying = false
+                        isPlaying = false,
+                        duration = duration!!
                     )
                 }
                 _mediaItems.postValue(Resource.success(items))

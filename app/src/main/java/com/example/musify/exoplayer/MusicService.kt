@@ -19,6 +19,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.example.musify.data.Constants
+import com.example.musify.data.Constants.DURATION
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Constants.NETWORK_ERROR
 import com.google.android.exoplayer2.*
@@ -202,6 +203,7 @@ class MusicService: MediaBrowserServiceCompat(){
             val song = musicSource.songs[windowIndex]
             val bundle = Bundle()
             bundle.putString(Constants.IS_LOCAL,song.getString(Constants.IS_LOCAL))
+            bundle.putString(DURATION,song.getString(DURATION))
             val description = MediaDescriptionCompat.Builder()
                     .setMediaUri(song.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri())
                     .setTitle(song.description.title)

@@ -80,10 +80,12 @@ class MainActivity : AppCompatActivity() {
                 when(destination.id){
                     R.id.detailSongFragment -> {
                         hideBottomBar()
+                        userViewPager.isVisible = false
                     }
                     else -> if(Config.isInitial) showBottomBar() else {
                         showBottomBar()
                         viewSong.isVisible = true
+                        userViewPager.isVisible = true
                     }
                 }
             }

@@ -20,18 +20,23 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="firebaseSongFragment">
+                  <entry key="globalActionToSongFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="offlineSongFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-9" />
+                            <option name="x" value="12" />
                             <option name="y" value="12" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_firebase_to_local">
+                            <entry key="action_offlineSongFragment_to_onlineSongFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -41,19 +46,23 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="globalActionToSongFragment">
-                    <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
-                  <entry key="localSongFragment">
+                  <entry key="onlineSongFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="286" />
-                            <option name="y" value="-65" />
+                            <option name="x" value="256" />
+                            <option name="y" value="12" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_onlineSongFragment_to_offlineSongFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

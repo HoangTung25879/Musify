@@ -9,6 +9,9 @@ data class Song(
         val isLocal:Boolean = false,
         var isPlaying:Boolean = false,
         val duration:String = "") {
+    override fun toString(): String {
+        return "${title} - ${isLocal} - ${isPlaying}"
+    }
 }
 
 //data class Song(

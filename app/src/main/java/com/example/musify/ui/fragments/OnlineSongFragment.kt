@@ -1,6 +1,7 @@
 package com.example.musify.ui.fragments
 
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,7 @@ class OnlineSongFragment :Fragment(){
     lateinit var songAdapter: OnlineSongAdapter
 
     private var currPlayingSong: Song? = null
+    private var playbackState : PlaybackStateCompat? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setupViewModel(inflater,container)
@@ -61,6 +63,18 @@ class OnlineSongFragment :Fragment(){
             }
         }
         binding.rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
+    }
+    private fun findSongPos(list: List<Song>,song:Song) : Int{
+        list.forEachIndexed { index, item ->
+            if(song.mediaId == item.mediaId &&
+                    song.imageUrl == item.imageUrl &&
+                    song.title == item.title &&
+                    song.subtitle == item.subtitle &&
+                    song.duration == item.duration &&
+                    song.songUrl == item.songUrl &&
+                    song.isLocal == item.isLocal) return index
+        }
+        return -1
     }
     private fun subscribeToObservers(){
         mainViewModel.mediaItems.observe(viewLifecycleOwner){ result->
@@ -88,12 +102,18 @@ class OnlineSongFragment :Fragment(){
             currPlayingSong = it.toSong()
         }
         mainViewModel.playbackState.observe(viewLifecycleOwner){
-            if (it?.isPlaying == true) {
+            playbackState = it
+            if (it?.isPlaying == true && currPlayingSong != null) {
                 val cloneList = songAdapter.currentList.map { it.copy() }
-                val songPos = cloneList.indexOf(currPlayingSong)
+                val songPos = findSongPos(cloneList,currPlayingSong!!)
                 if (songPos != -1 ){
                     cloneList.mapIndexed { index, song ->
                         song.isPlaying = index == songPos
+                    }
+                    songAdapter.submitList(cloneList)
+                } else {
+                    cloneList.map {
+                        it.isPlaying = false
                     }
                     songAdapter.submitList(cloneList)
                 }

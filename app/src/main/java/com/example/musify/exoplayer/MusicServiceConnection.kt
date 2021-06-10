@@ -93,7 +93,9 @@ class MusicServiceConnection(
         }
         //When song change (call when player skip to next song or previous song)
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            _currPlayingSong.postValue(metadata)
+            if(metadata != null){
+                _currPlayingSong.postValue(metadata)
+            }
         }
         //notify when network error
         override fun onSessionEvent(event: String?, extras: Bundle?) {

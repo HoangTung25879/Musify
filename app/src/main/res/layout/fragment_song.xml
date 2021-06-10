@@ -222,5 +222,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/tvEqualizer"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="28dp"
+            android:background="@color/colorHint"
+            android:src="@drawable/ic_baseline_tune_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.724"
+            app:layout_constraintStart_toEndOf="@+id/tvNowPlaying"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

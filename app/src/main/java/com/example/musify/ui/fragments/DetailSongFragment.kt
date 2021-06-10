@@ -1,5 +1,6 @@
 package com.example.musify.ui.fragments
 
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
@@ -14,12 +15,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentOnAttachListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bullhead.equalizer.DialogEqualizerFragment
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -53,6 +58,7 @@ class DetailSongFragment:Fragment() {
     private var playbackState :PlaybackStateCompat? = null
     private var shouldUpdateSeekbar : Boolean = true
     private var job: Job? = null
+    private var equalizerFragment : DialogEqualizerFragment? = null
 
 
     override fun onCreateView(
@@ -74,6 +80,9 @@ class DetailSongFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //requireActivity because this viewmodel is bound to activity lifecycle not fragment lifecycle
         binding.apply {
+            tvEqualizer.setOnClickListener {
+                equalizerFragment?.show(childFragmentManager,"EQ")
+            }
             ivPlayPauseDetail.setOnClickListener{
                 currPlayingSong?.let {
                     mainViewModel.playOrToggleSong(it,toggle = true)
@@ -109,6 +118,7 @@ class DetailSongFragment:Fragment() {
         }
         subscribeToObservers()
     }
+
     private fun togglePreviousSongBtn(disable:Boolean){
         binding.apply {
             if(disable){
@@ -245,6 +255,13 @@ class DetailSongFragment:Fragment() {
 
         mainViewModel.audioSessionId.observe(viewLifecycleOwner){
             if (it != -1){
+                equalizerFragment = DialogEqualizerFragment.Builder().setAudioSessionId(it)
+                    .themeColor(ContextCompat.getColor(requireContext(), R.color.primaryColor))
+                    .textColor(ContextCompat.getColor(requireContext(), R.color.textColor))
+                    .accentAlpha(ContextCompat.getColor(requireContext(), R.color.playingCardColor))
+                    .darkColor(ContextCompat.getColor(requireContext(), R.color.primaryDarkColor))
+                    .setAccentColor(ContextCompat.getColor(requireContext(), R.color.secondaryColor))
+                    .build()
             }
         }
     }

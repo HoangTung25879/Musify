@@ -88,6 +88,7 @@ class MusicService: MediaBrowserServiceCompat(){
         // and will allow the MediaBrowser (client to work with the MediaSession)
         sessionToken = mediaSession.sessionToken
 
+
         musicNotificationManager = MusicNotificationManager(
                 this,
                 mediaSession.sessionToken,
@@ -112,7 +113,7 @@ class MusicService: MediaBrowserServiceCompat(){
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlaybackPreparer(musicPlaybackPreparer)
-        mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
+        mediaSessionConnector.setQueueNavigator(MusicQueueNavigator(mediaSession))
         mediaSessionConnector.setPlayer(exoPlayer)
 
         musicPlayerEventListener = MusicPlayerEventListener()
@@ -148,6 +149,10 @@ class MusicService: MediaBrowserServiceCompat(){
 
     override fun onDestroy() {
         super.onDestroy()
+        mediaSession.run {
+            isActive = false
+            release()
+        }
         serviceScope.cancel()
         exoPlayer.removeListener(musicPlayerEventListener)
         exoPlayer.release()
@@ -197,7 +202,7 @@ class MusicService: MediaBrowserServiceCompat(){
         }
     }
 
-    private inner class MusicQueueNavigator:TimelineQueueNavigator(mediaSession){
+    private inner class MusicQueueNavigator(mediaSession: MediaSessionCompat):TimelineQueueNavigator(mediaSession){
         //send description to onMetadataChanged of MediaControllerCallback
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
             val song = musicSource.songs[windowIndex]
@@ -239,11 +244,17 @@ class MusicService: MediaBrowserServiceCompat(){
         //dont need
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
     }
+    /**
+     * Listen for events from ExoPlayer.
+     */
     private inner class MusicPlayerEventListener : Player.EventListener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             super.onPlayerStateChanged(playWhenReady, playbackState)
             if(playbackState == Player.STATE_READY && !playWhenReady){
+                // If playback is paused we remove the foreground state which allows the
+                // notification to be dismissed
                 this@MusicService.stopForeground(false)
+                isForegoundService = false
             }
         }
 
@@ -270,14 +281,11 @@ class MusicService: MediaBrowserServiceCompat(){
                             this,
                             Intent(applicationContext,this::class.java)
                     )
-                    startForeground(Constants.NOTIFICATION_ID,notification)
+                    startForeground(notificationId,notification)
                     isForegoundService=true
                 }
             }
         }
     }
 
-//    private fun setupMusic(){
-//
-//    }
 }

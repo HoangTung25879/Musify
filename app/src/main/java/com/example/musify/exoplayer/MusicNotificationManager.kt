@@ -15,6 +15,10 @@ import com.example.musify.data.Constants.NOTIFICATION_ID
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 
+/**
+ * A wrapper class for ExoPlayer's PlayerNotificationManager. It sets up the notification shown to
+ * the user during audio playback and provides track metadata, such as track title and icon image.
+ */
 class MusicNotificationManager(
         private val context:Context,
         sessionToken: MediaSessionCompat.Token,

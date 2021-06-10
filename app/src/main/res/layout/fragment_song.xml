@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground"
+        android:background="@color/colorHint"
         tools:context=".ui.MainActivity">
 
         <View
@@ -38,7 +38,6 @@
             android:id="@+id/view1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/colorHint"
             app:layout_constraintBottom_toTopOf="@id/viewSupportAlbumArt"
             app:layout_constraintEnd_toStartOf="@id/viewSupportAlbumArt"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,48 +47,44 @@
             android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/colorHint"
             app:layout_constraintBottom_toTopOf="@id/viewSupportBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/view1"
             app:layout_constraintTop_toBottomOf="@id/view1" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.github.naz013.albumcoverequalizer.AlbumCoverEqView
             android:id="@+id/ivSongImage"
-            android:layout_width="243dp"
-            android:layout_height="243dp"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             app:layout_constraintBottom_toBottomOf="@id/viewSupportAlbumArt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/viewSupportAlbumArt"
-            android:src="@drawable/albumart" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:background="@android:color/transparent"
+            app:acv_animationSpeed="slow"
+            app:acv_numberOfBars="15"
+            app:acv_barColor="@color/colorHint"
+            app:acv_dividerColor="@color/colorHint"
+            />
+        <ImageView
+            android:id="@+id/ivSongImageDefault"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             app:layout_constraintBottom_toBottomOf="@id/viewSupportAlbumArt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/viewSupportAlbumArt">
-
-            <SurfaceView
-                android:id="@+id/songVisualizer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="@id/viewSupportAlbumArt"/>
 
         <TextView
             android:id="@+id/tvSongName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginBottom="60dp"
             android:gravity="center"
             android:text="Song Name"
             android:textColor="@color/colorPrimaryText"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/ivSongImage" />
+            app:layout_constraintBottom_toTopOf="@id/layoutPlayer" />
 
         <TextView
             android:id="@+id/tvSongArtist"

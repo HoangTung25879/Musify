@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.globalActionToSongFragment)
                 }
             }
-            navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
                 when(destination.id){
                     R.id.detailSongFragment -> {
                         hideBottomBar()

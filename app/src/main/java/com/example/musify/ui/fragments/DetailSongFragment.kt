@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -35,7 +36,7 @@ import com.example.musify.data.entities.Song
 import com.example.musify.databinding.FragmentSongBinding
 import com.example.musify.exoplayer.*
 import com.example.musify.ui.viewmodels.MainViewModel
-import com.example.musify.ui.viewmodels.SongViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song.*
@@ -52,7 +53,6 @@ class DetailSongFragment:Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: FragmentSongBinding
-    private val songViewModel: SongViewModel by viewModels()
 
     private var currPlayingSong: Song? = null
     private var playbackState :PlaybackStateCompat? = null
@@ -80,6 +80,24 @@ class DetailSongFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //requireActivity because this viewmodel is bound to activity lifecycle not fragment lifecycle
         binding.apply {
+            ivRepeat.setImageResource(if(Config.isRepeat) R.drawable.ic_repeat_on else R.drawable.ic_repeat)
+            ivRepeat.setOnClickListener {
+                Config.isRepeat = !Config.isRepeat
+                if (Config.isRepeat){
+                    ivRepeat.setImageResource(R.drawable.ic_repeat_on)
+                } else {
+                    ivRepeat.setImageResource(R.drawable.ic_repeat)
+                }
+            }
+            ivShuffle.setImageResource(if(Config.isShuffle) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle)
+            ivShuffle.setOnClickListener {
+                Config.isShuffle = !Config.isShuffle
+                if (Config.isShuffle){
+                    ivShuffle.setImageResource(R.drawable.ic_shuffle_on)
+                } else {
+                    ivShuffle.setImageResource(R.drawable.ic_shuffle)
+                }
+            }
             tvEqualizer.setOnClickListener {
                 equalizerFragment?.show(childFragmentManager,"EQ")
             }
@@ -119,32 +137,6 @@ class DetailSongFragment:Fragment() {
         subscribeToObservers()
     }
 
-    private fun togglePreviousSongBtn(disable:Boolean){
-        binding.apply {
-            if(disable){
-                ivPreviousSong.setOnClickListener(null)
-                ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
-            } else {
-                ivPreviousSong.setOnClickListener{
-                    mainViewModel.skipToPreviousSong()
-                }
-                ivPreviousSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
-            }
-        }
-    }
-    private fun toggleNextSongBtn(disable: Boolean){
-        binding.apply {
-            if(disable){
-                ivNextSong.setOnClickListener(null)
-                ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_disable)
-            } else {
-                ivNextSong.setOnClickListener {
-                    mainViewModel.skipToNextSong()
-                }
-                ivNextSong.setBackgroundResource(R.drawable.next_previous_button_background_enable)
-            }
-        }
-    }
     private fun updateTitleAndSongImage(song: Song){
         binding.apply {
             tvSongName.text = song.title
@@ -237,14 +229,14 @@ class DetailSongFragment:Fragment() {
             }
             binding.seekBar.progress = it?.position?.toInt() ?: 0
         }
-        songViewModel.currSongDuration.observe(viewLifecycleOwner){
+        mainViewModel.currSongDuration.observe(viewLifecycleOwner){
             binding.apply {
                 seekBar.max = it.toInt()
                 val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
                 tvSongDuration.text = dateFormat.format(it)
             }
         }
-        songViewModel.currPlayerPosition.observe(viewLifecycleOwner){
+        mainViewModel.currPlayerPosition.observe(viewLifecycleOwner){
             if(shouldUpdateSeekbar){
                 binding.apply {
                     seekBar.progress = it.toInt()

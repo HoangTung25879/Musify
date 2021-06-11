@@ -14,8 +14,10 @@ inline fun <T> sdk29AndUp(onSdk29: () -> T): T? {
     } else null
 }
 object Config{
-    var isLocalSong = false
     var isInitial = true
+    var isRepeat = false
+    var isShuffle = false
+    var isLocal = false
 }
 fun checkAllPermission(context: Context):Boolean{
     var result = false

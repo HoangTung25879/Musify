@@ -8,18 +8,28 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.musify.Config
+import com.example.musify.data.Constants
 import com.example.musify.data.Constants.DURATION
 import com.example.musify.data.Constants.IS_LOCAL
 import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.Resource
 import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+private const val TAG = "MAINVIEWMODEL"
 class MainViewModel @ViewModelInject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ):ViewModel(){
     private val _mediaItems = MutableLiveData<Resource<List<Song>>>()
     val mediaItems : LiveData<Resource<List<Song>>> = _mediaItems
+    private val _currSongDuration = MutableLiveData<Long>()
+    val currSongDuration: LiveData<Long> = _currSongDuration
+    private val _currPlayerPosition = MutableLiveData<Long>()
+    val currPlayerPosition : LiveData<Long> = _currPlayerPosition
 
     val isConnected = musicServiceConnection.isConnected
     val networkError = musicServiceConnection.networkError
@@ -35,12 +45,10 @@ class MainViewModel @ViewModelInject constructor(
                 children: MutableList<MediaBrowserCompat.MediaItem>
             ) {
                 super.onChildrenLoaded(parentId, children)
-                Log.d("MAINVIEWMODEL","${children.size}")
                 val items = children.map {
                     val bundle = it.description.extras
                     val isLocal = bundle?.getString(IS_LOCAL).toBoolean()
                     val duration = bundle?.getString(DURATION)
-                    Log.d("MAINVIEWMODEL","${it.mediaId!!} - ${it.description.title} - ${it.description.subtitle} - ${it.description.mediaUri} - ${isLocal}")
                     Song(
                         mediaId = it.mediaId!!,
                         title = it.description.title.toString(),
@@ -55,10 +63,13 @@ class MainViewModel @ViewModelInject constructor(
                 _mediaItems.postValue(Resource.success(items))
             }
         })
+        updateCurrentPlayerPosition()
     }
 
     fun skipToNextSong(){
-        musicServiceConnection.transportControls.skipToNext()
+        if (Config.isShuffle){
+            playOrToggleSong(randomSong()!!)
+        } else musicServiceConnection.transportControls.skipToNext()
     }
     fun skipToPreviousSong(){
         musicServiceConnection.transportControls.skipToPrevious()
@@ -81,7 +92,48 @@ class MainViewModel @ViewModelInject constructor(
             }
         } else {
             //play new song
+                Config.isLocal = mediaItem.isLocal
             musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId,null)
+        }
+    }
+    private fun handleRepeat(){
+        if(Config.isRepeat){
+            seekTo(0L)
+        }
+    }
+    private fun handleShuffle(){
+        if(Config.isShuffle){
+            if (Config.isRepeat){
+                seekTo(0L)
+            } else {
+                playOrToggleSong(randomSong()!!)
+            }
+        }
+    }
+    private fun randomSong() : Song?{
+        val offlineSong = mediaItems.value?.data?.filter { it.isLocal == true }
+        val onlineSong = mediaItems.value?.data?.filter { it.isLocal == false }
+        if (Config.isLocal) return offlineSong?.random() else return onlineSong?.random()
+    }
+    //create coroutine bound to this viewmodel lifecycle and continuous update player position
+    //and song duration
+    private fun updateCurrentPlayerPosition(){
+        //coroutine cancel when viewmodel destroy
+        viewModelScope.launch {
+            while (true){
+                val pos = playbackState.value?.currentPlaybackPosition
+                if (pos != null && currSongDuration.value != null){
+                    if (pos > (currSongDuration.value!! - 1000L) && pos < currSongDuration.value!!){
+                        handleRepeat()
+                        handleShuffle()
+                    }
+                }
+                if (currPlayerPosition.value != pos){
+                    _currSongDuration.postValue(MusicService.currSongDuration)
+                    _currPlayerPosition.postValue(pos!!)
+                }
+                delay(Constants.UPDATE_PLAYER_POSITION_INTERVAL)
+            }
         }
     }
     override fun onCleared() {

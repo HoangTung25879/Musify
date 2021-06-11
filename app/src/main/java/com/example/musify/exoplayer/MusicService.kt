@@ -176,7 +176,6 @@ class MusicService: MediaBrowserServiceCompat(){
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
         //MEDIA_ROOT_ID is id of a playlist
-        Log.d("MAINVIEWMODEL","ONLOADCHILDREN - $parentId")
         Log.d(SERVICE_TAG,"ONLOADCHILDREN")
         when(parentId){
             MEDIA_ROOT_ID ->{

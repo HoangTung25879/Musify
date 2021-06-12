@@ -141,17 +141,13 @@ class DetailSongFragment:Fragment() {
         binding.apply {
             tvSongName.text = song.title
             tvSongArtist.text = song.subtitle
-            glide.asBitmap().load(song.imageUrl).into(object : CustomTarget<Bitmap>(){
+            glide.asBitmap().load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(object : CustomTarget<Bitmap>(){
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     ivSongImage.setCoverImage(resource!!)
                     ivSongImageDefault.setImageBitmap(resource!!)
                 }
-
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    // this is called when imageView is cleared on lifecycle call or for
-                    // some other reason.
-                    // if you are referencing the bitmap somewhere else too other than this imageView
-                    // clear it here as you can no longer have the bitmap
+                    TODO("Not yet implemented")
                 }
             })
         }
@@ -166,7 +162,7 @@ class DetailSongFragment:Fragment() {
         return array
     }
 
-    private fun startSpinAnimation(){
+    private fun startAnimation(){
         binding.apply {
             ivSongImage.isVisible = true
             ivSongImageDefault.isVisible = false
@@ -184,9 +180,9 @@ class DetailSongFragment:Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopSpinAnimation()
+        stopAnimation()
     }
-    private fun stopSpinAnimation(){
+    private fun stopAnimation(){
         binding.apply {
             ivSongImage.isVisible = false
             ivSongImageDefault.isVisible = true
@@ -222,8 +218,8 @@ class DetailSongFragment:Fragment() {
                 if(playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play
             )
             when(it?.state){
-                STATE_PLAYING -> startSpinAnimation()
-                STATE_PAUSED -> stopSpinAnimation()
+                STATE_PLAYING -> startAnimation()
+                STATE_PAUSED -> stopAnimation()
                 else -> Unit
             }
             binding.seekBar.progress = it?.position?.toInt() ?: 0

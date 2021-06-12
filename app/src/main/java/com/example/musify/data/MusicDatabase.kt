@@ -72,7 +72,7 @@ class MusicDatabase {
                 //30 - SaiGonDauLongQua-HuaKimTuyenHoangDuyen-6992977 - NhacCuaTui.com - Hứa Kim Tuyền, Hoàng Duyên - content://media/external/audio/media/30 - 308736 - Sài Gòn Đau Lòng Quá - Nhạc Trẻ - null
                 //28 - ThanhXuan-DaLAB-5773854 - Thanh Xuan - Da LAB - content://media/external/audio/media/28 - 220552 - Thanh Xuan - R&B/Hip Hop/Rap - null
                 // 27 - ThichQuaRoiNa-TlinhTrungTranWxrdieNgerPacman-6413849 - NhacCuaTui.com - Tlinh, Trung Trần, Wxrdie, Nger, Pacman - content://media/external/audio/media/27 - 177450 - Thích Quá Rồi Nà - Nhạc Trẻ - null
-                Log.d(TAG, "$id - $artist - $contentUri - $title - $duration")
+//                Log.d(TAG, "$id - $artist - $contentUri - $title - $duration")
                 songList += Song(mediaId = id, subtitle = artist, title=title, songUrl = contentUri,isLocal = true,duration = duration)
             }
         }

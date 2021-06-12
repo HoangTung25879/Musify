@@ -141,8 +141,7 @@ class DetailSongFragment:Fragment() {
         binding.apply {
             tvSongName.text = song.title
             tvSongArtist.text = song.subtitle
-//            glide.load(R.drawable.music).into(ivSongImage)
-            glide.asBitmap().load(R.drawable.music).into(object : CustomTarget<Bitmap>(){
+            glide.asBitmap().load(song.imageUrl).into(object : CustomTarget<Bitmap>(){
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     ivSongImage.setCoverImage(resource!!)
                     ivSongImageDefault.setImageBitmap(resource!!)

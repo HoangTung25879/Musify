@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.example.musify.data.entities.Song
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,6 +19,9 @@ object Config{
     var isRepeat = false
     var isShuffle = false
     var isLocal = false
+    var currentSongSelect : Song? = null
+    var isConnected = false
+    var currentSongList : List<Song>? = null
 }
 fun checkAllPermission(context: Context):Boolean{
     var result = false

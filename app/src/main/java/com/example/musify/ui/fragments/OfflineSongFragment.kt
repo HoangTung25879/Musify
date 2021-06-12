@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 private val TAG = "OFFLINESONGFRAGMENT"
 @AndroidEntryPoint
-class OfflineSongFragment : Fragment(R.layout.fragment_offline_song) {
+class OfflineSongFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: FragmentOfflineSongBinding
@@ -64,6 +64,13 @@ class OfflineSongFragment : Fragment(R.layout.fragment_offline_song) {
             override fun onItemClicked(song: Song) {
                 mainViewModel.playOrToggleSong(song)
             }
+
+            override fun onUploadClicked(song: Song) {
+                Config.currentSongSelect = song
+                val uploadDialog = UploadDialogFragment()
+                uploadDialog.isCancelable = false
+                uploadDialog.show(activity!!.supportFragmentManager,"UPLOAD")
+            }
         }
     }
 
@@ -86,14 +93,9 @@ class OfflineSongFragment : Fragment(R.layout.fragment_offline_song) {
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs->
                         //display list song to view
-                        songAdapter.submitList(
-                            songs.filter { it.isLocal == true }
-                        )
-                        if(songs.size == 0){
-                            tvEmptyOffline.isVisible = false
-                        } else {
-                            tvEmptyOffline.visibility = View.GONE
-                        }
+                        val offlineSongList = songs.filter { it.isLocal == true }
+                        songAdapter.submitList(offlineSongList)
+                        tvEmptyOffline.isVisible = offlineSongList.size == 0
                     }
                 }
                 Status.ERROR -> Unit

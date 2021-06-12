@@ -8,6 +8,7 @@ import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import com.example.musify.Config
 import com.example.musify.data.Constants.SONG_COLLECTION
 import com.example.musify.data.entities.Song
 import com.example.musify.sdk29AndUp
@@ -23,10 +24,13 @@ class MusicDatabase {
     private val songCollection = firestore.collection(SONG_COLLECTION)
     suspend fun getFirebaseSongs(): List<Song> {
         FirebaseFirestore.setLoggingEnabled(true)
+        if(Config.isConnected == false){
+            return mutableListOf<Song>()
+        }
         return try {
             songCollection.get().await().toObjects(Song::class.java)
         } catch (e: Exception) {
-            emptyList<Song>()
+            mutableListOf<Song>()
         }
     }
 

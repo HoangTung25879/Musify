@@ -25,6 +25,8 @@ import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import org.imaginativeworld.oopsnointernet.callbacks.ConnectionCallback
+import org.imaginativeworld.oopsnointernet.dialogs.signal.NoInternetDialogSignal
 import javax.inject.Inject
 
 private val TAG = "MAINACTIVITY"
@@ -48,6 +50,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NoInternetDialogSignal.Builder(this,lifecycle).apply {
+            dialogProperties.apply {
+                connectionCallback = object : ConnectionCallback{
+                    override fun hasActiveConnection(hasActiveConnection: Boolean) {
+                        Config.isConnected = hasActiveConnection
+                    }
+                }
+                cancelable = false
+                noInternetConnectionTitle = "No Internet"
+                noInternetConnectionMessage =
+                    "Check your Internet connection and try again."
+                showInternetOnButtons = true
+                pleaseTurnOnText = "Please turn on"
+                wifiOnButtonText = "Wifi"
+                mobileDataOnButtonText = "Mobile data"
+            }
+        }.build()
         subscribeToObservers()
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main_test)
         binding.apply {
@@ -155,10 +174,8 @@ class MainActivity : AppCompatActivity() {
                                 swipeSongAdapter.submitList(songs)
                                 //because if songlist empty and we want to display image from first song app will crash
                                 if (songs.isNotEmpty()) {
-//                                glide.load((currPlayingSong ?: songs[0]).imageUrl)
-//                                    .into(ivCurSongImage)
-                                    glide.load(R.drawable.music)
-                                            .into(ivCurSongImage)
+                                glide.load((currPlayingSong ?: songs[0]).imageUrl)
+                                    .into(ivCurSongImage)
                                 }
                                 switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
                             }
@@ -172,9 +189,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.currPlayingSong.observe(this) {
             if (it == null) return@observe
             currPlayingSong = it.toSong()
-//            glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             binding.apply {
-                glide.load(R.drawable.music).into(ivCurSongImage)
+                glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             }
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
         }

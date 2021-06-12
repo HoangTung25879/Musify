@@ -13,11 +13,3 @@ data class Song(
         return "${title} - ${isLocal} - ${isPlaying}"
     }
 }
-
-//data class Song(
-//        val id: Long,
-//        val url: String,
-//        val songName: String,
-//        val artistName: String,
-//        val albumName: String
-//)

@@ -11,7 +11,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="5dp"
         app:strokeColor="@color/colorSeekbar"
@@ -36,7 +36,7 @@
 
             <TextView
                 android:id="@+id/tvSongName"
-                android:layout_width="240dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
@@ -49,7 +49,7 @@
 
             <TextView
                 android:id="@+id/tvSongArtist"
-                android:layout_width="240dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Mariya Takeuchi"
                 android:ellipsize="end"
@@ -62,7 +62,7 @@
                 android:id="@+id/tvSongDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="52dp"
                 android:text="03:00"
                 app:layout_constraintBottom_toBottomOf="@+id/tvSongArtist"
                 app:layout_constraintStart_toEndOf="@+id/tvSongArtist" />
@@ -71,9 +71,19 @@
                 android:id="@+id/ivIsPlaying"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="64dp"
                 app:indicatorColor="@color/colorSeekbar"
                 app:indicatorName="LineScalePulseOutIndicator"
+                app:layout_constraintStart_toEndOf="@+id/tvSongName"
+                app:layout_constraintTop_toTopOf="@+id/tvSongName" />
+
+            <ImageView
+                android:id="@+id/ivDownload"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_baseline_download_24"
+                app:layout_constraintBottom_toBottomOf="@+id/tvSongName"
                 app:layout_constraintStart_toEndOf="@+id/tvSongName"
                 app:layout_constraintTop_toTopOf="@+id/tvSongName" />
 

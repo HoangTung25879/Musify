@@ -17,7 +17,6 @@ import com.example.musify.adapter.OnlineSongAdapter
 import com.example.musify.data.Status
 import com.example.musify.data.entities.Song
 import com.example.musify.databinding.FragmentOnlineSongBinding
-import com.example.musify.exoplayer.isPlayEnabled
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
@@ -61,6 +60,13 @@ class OnlineSongFragment :Fragment(){
             override fun onItemClicked(song: Song) {
                 mainViewModel.playOrToggleSong(song)
             }
+
+            override fun onDownloadClicked(song: Song) {
+                Config.currentSongSelect = song
+                val downloadDialog = DownloadDialogFragment()
+                downloadDialog.isCancelable = false
+                downloadDialog.show(activity!!.supportFragmentManager,"DOWNLOAD")
+            }
         }
         binding.rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -83,14 +89,10 @@ class OnlineSongFragment :Fragment(){
                     allSongsProgressBar.isVisible = false
                     result.data?.let { songs->
                         //display list song to view
-                        songAdapter.submitList(
-                                songs.filter { it.isLocal == false }
-                            )
-                        if(songs.size == 0){
-                            tvEmptyOnline.isVisible = false
-                        } else {
-                            tvEmptyOnline.visibility = View.GONE
-                        }
+                        val onlineSongList = songs.filter { it.isLocal == false }
+                        Log.d(TAG,"${onlineSongList.size}")
+                        songAdapter.submitList(onlineSongList)
+                        tvEmptyOnline.isVisible = onlineSongList.size == 0
                     }
                 }
                 Status.ERROR -> Unit

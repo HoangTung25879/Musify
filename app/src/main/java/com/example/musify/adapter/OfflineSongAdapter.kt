@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -42,18 +43,22 @@ class OfflineSongAdapter  @Inject constructor(
         private val tvDuration = itemView.findViewById<TextView>(R.id.tvSongDuration)
         private val ivIsPlaying = itemView.findViewById<AVLoadingIndicatorView>(R.id.ivIsPlaying)
         private val ivSongImage = itemView.findViewById<CircleImageView>(R.id.ivItemImage)
+        private val ivDownload = itemView.findViewById<ImageView>(R.id.ivDownload)
 
 
         fun bind(song: Song,glide: RequestManager,listener: SongAdapterListener?){
             itemView.setOnClickListener {
                 listener?.onItemClicked(song)
             }
+            ivDownload.setOnClickListener {
+                listener?.onUploadClicked(song)
+            }
             tvName.text = song.title
             tvArtist.text = song.subtitle
             tvDuration.text = durationFormat(song.duration)
             if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
-            //glide.load(if(song.imageUrl == "") R.drawable.albumart else song.imageUrl).into(ivItemImage)
-            glide.load(R.drawable.music).into(ivSongImage)
+            glide.load(song.imageUrl).into(ivSongImage)
+            glide.load(R.drawable.ic_baseline_cloud_upload_24).into(ivDownload)
         }
     }
 
@@ -69,5 +74,6 @@ class OfflineSongAdapter  @Inject constructor(
 
     interface SongAdapterListener{
         fun onItemClicked(song:Song)
+        fun onUploadClicked(song: Song)
     }
 }

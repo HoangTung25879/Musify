@@ -35,9 +35,9 @@ object AppModule {
         @ApplicationContext context: Context
     ) = Glide.with(context).setDefaultRequestOptions(
         RequestOptions()
-            .placeholder(R.drawable.ic_image)
-            .error(R.drawable.ic_image)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .placeholder(R.drawable.music)
+            .error(R.drawable.music)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
     )
     @Provides
     fun provideContext(@ApplicationContext context: Context) : Context = context

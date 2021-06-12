@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="There is no song in your device"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:gravity="center" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

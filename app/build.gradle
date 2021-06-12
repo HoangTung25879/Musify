@@ -80,8 +80,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
 
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     // Activity KTX for viewModels()
     implementation "androidx.activity:activity-ktx:1.1.0"
 
@@ -90,9 +90,6 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
     kapt "androidx.hilt:hilt-compiler:1.0.0-alpha02"
-
-    // Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Firebase Firestore
     implementation 'com.google.firebase:firebase-firestore-ktx:21.6.0'
@@ -117,6 +114,10 @@ dependencies {
     implementation 'com.github.naz013:album-cover-equalizer-view:1.0'
     //Android Equalizer
     implementation 'com.github.bullheadandplato:AndroidEqualizer:2.2'
+    //KTloadingButton
+    implementation 'com.github.timonknispel:KTLoadingButton:1.2.0'
+    //OOps No Internet
+    implementation 'org.imaginativeworld.oopsnointernet:oopsnointernet:2.0.0'
 }
 repositories {
     mavenCentral()

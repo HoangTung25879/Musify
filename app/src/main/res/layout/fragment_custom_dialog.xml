@@ -13,19 +13,22 @@
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_round_bg"
         android:layout_gravity="center">
-                <TextView
-                    android:id="@+id/tvDescribe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Do you want to download song?"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/btnAccept"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-                <TextView
+        <TextView
+            android:id="@+id/tvDescribe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do you want to download song?"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+            app:layout_constraintVertical_bias="0.295" />
+
+        <TextView
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,6 +50,7 @@
                     android:layout_marginTop="148dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/cancel_btn_bg"
+                    android:textColor="@color/fbutton_color_pomegranate"
                     android:textAllCaps="false"
                     android:text="Cancel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -54,19 +58,34 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
                 <de.timonknispel.ktloadingbutton.KTLoadingButton
-                    android:id="@+id/btnAccept"
+                    android:id="@+id/btnAcceptDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="148dp"
                     android:layout_marginEnd="36dp"
                     app:allCaps="false"
                     app:buttonName="Download"
-                    app:buttonColor="@color/black"
-                    android:background="@drawable/accept_btn_bg"
+                    android:visibility="gone"
+                    app:buttonColor="@color/colorPrimary"
                     android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     />
+        <de.timonknispel.ktloadingbutton.KTLoadingButton
+            android:id="@+id/btnAcceptUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="148dp"
+            android:layout_marginEnd="36dp"
+            app:allCaps="false"
+            app:buttonName="Upload"
+            app:buttonColor="@color/colorPrimary"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

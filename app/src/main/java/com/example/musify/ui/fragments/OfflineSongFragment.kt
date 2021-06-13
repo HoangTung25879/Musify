@@ -69,12 +69,6 @@ class OfflineSongFragment : Fragment() {
             override fun onMenuClicked(song: Song, view: View) {
                 openOptionMenu(song,view)
             }
-            //            override fun onUploadClicked(song: Song) {
-//                Config.currentSongSelect = song
-//                val uploadDialog = UploadDialogFragment()
-//                uploadDialog.isCancelable = false
-//                uploadDialog.show(activity!!.supportFragmentManager,"UPLOAD")
-//            }
         }
     }
     private fun openOptionMenu(song: Song,view: View){
@@ -83,6 +77,7 @@ class OfflineSongFragment : Fragment() {
         popup.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.upload->{
+                    onUploadClicked(song)
                     true
                 }
                 R.id.delete->{
@@ -92,6 +87,12 @@ class OfflineSongFragment : Fragment() {
             }
         }
         popup.show()
+    }
+    private fun onUploadClicked(song: Song){
+        Config.currentSongSelect = song
+        val uploadDialog = UploadDialogFragment()
+        uploadDialog.isCancelable = false
+        uploadDialog.show(requireActivity().supportFragmentManager,"UPLOAD")
     }
     private fun findSongPos(list: List<Song>,song:Song) : Int{
         list.forEachIndexed { index, item ->

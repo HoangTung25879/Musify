@@ -10,6 +10,6 @@ data class Song(
         var isPlaying:Boolean = false,
         val duration:String = "") {
     override fun toString(): String {
-        return "${title} - ${isLocal} - ${isPlaying}"
+        return "$title - $subtitle - $mediaId - $songUrl - $imageUrl - $isLocal - $isPlaying - $duration"
     }
 }

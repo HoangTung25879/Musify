@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.example.musify.Config
@@ -30,8 +31,9 @@ class DownloadDialogFragment : DialogFragment() {
         binding.apply {
             tvTitle.text = "Download"
             tvDescribe.text = "Do you want to download ${Config.currentSongSelect?.title}?"
+            btnAcceptDownload.isVisible = true
             btnCancel.setOnClickListener { dismiss() }
-            btnAccept.setOnClickListener {
+            btnAcceptDownload.setOnClickListener {
 
             }
         }

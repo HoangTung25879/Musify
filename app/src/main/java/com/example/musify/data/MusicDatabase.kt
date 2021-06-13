@@ -13,6 +13,8 @@ import com.example.musify.data.Constants.SONG_COLLECTION
 import com.example.musify.data.entities.Song
 import com.example.musify.sdk29AndUp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -23,7 +25,6 @@ class MusicDatabase {
     private val firestore = FirebaseFirestore.getInstance()
     private val songCollection = firestore.collection(SONG_COLLECTION)
     suspend fun getFirebaseSongs(): List<Song> {
-        FirebaseFirestore.setLoggingEnabled(true)
         if(Config.isConnected == false){
             return mutableListOf<Song>()
         }
@@ -33,6 +34,16 @@ class MusicDatabase {
             mutableListOf<Song>()
         }
     }
+//    private val firestore = Firebase.firestore
+//    private val songCollection = firestore.collection(SONG_COLLECTION)
+//    suspend fun getFirebaseSongs(): List<Song>{
+//        val songList = mutableListOf<Song>()
+//        songCollection.get().addOnSuccessListener { documents ->
+//            for (document in documents){
+//                songList.add(document.toObject(Song::class.java))
+//            }
+//        }
+//    }
 
     fun getLocalSongs(context: Context): List<Song> {
         val songList = mutableListOf<Song>()

@@ -2,10 +2,16 @@ package com.example.musify
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import com.example.musify.data.entities.Song
+import com.example.musify.ui.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,4 +58,9 @@ fun checkReadPermission(context: Context) : Boolean{
 fun durationFormat(duration:String):String{
     val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     return dateFormat.format(duration.toLong())
+}
+fun randomNumber(): Int{
+    val start = 60
+    val end = 500
+    return (Math.random() * (end - start + 1)).toInt() + start
 }

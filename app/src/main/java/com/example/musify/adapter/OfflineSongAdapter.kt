@@ -57,7 +57,7 @@ class OfflineSongAdapter  @Inject constructor(
             tvArtist.text = song.subtitle
             tvDuration.text = durationFormat(song.duration)
             if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
-            glide.load(song.imageUrl).into(ivSongImage)
+            glide.load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(ivSongImage)
         }
     }
 

@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.viewpager.widget.ViewPager
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun setupViewPager(){
         binding.apply {
-            val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager,FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+            val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             userViewPager.adapter = viewPagerAdapter
             userViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity() {
                             viewSong.isVisible = true
                             Config.isInitial = false
                             result.data?.let { songs ->
+                                Config.currentSongList = songs
                                 swipeSongAdapter.submitList(songs)
                                 //because if songlist empty and we want to display image from first song app will crash
                                 if (songs.isNotEmpty()) {

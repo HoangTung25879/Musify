@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import com.example.musify.R
 import com.example.musify.checkAllPermission
 import kotlinx.android.synthetic.main.splash_activity.*
+import kotlinx.coroutines.*
 
 private const val TAG = "SPLASHACTIVITY"
 class SplashActivity : AppCompatActivity() {
@@ -33,10 +34,13 @@ class SplashActivity : AppCompatActivity() {
         }
     }
     private fun goToMainActivity(){
-        Handler().postDelayed({
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish()
-        }, 1500)
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1500)
+            withContext(Dispatchers.Main){
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                finish()
+            }
+        }
     }
     private fun goToSetting(){
         val appSetting = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

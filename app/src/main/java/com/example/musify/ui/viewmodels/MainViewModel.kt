@@ -54,7 +54,7 @@ class MainViewModel @ViewModelInject constructor(
                         title = it.description.title.toString(),
                         subtitle = it.description.subtitle.toString(),
                         songUrl = it.description.mediaUri.toString(),
-                        imageUrl = it.description.iconUri.toString(),
+                        imageUrl = (it.description.iconUri ?: "").toString(),
                         isLocal = isLocal,
                         isPlaying = false,
                         duration = duration!!

@@ -12,24 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:strokeColor="@color/colorSeekbar"
-        app:strokeWidth="2dp">
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/ivItemImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
                 android:src="@drawable/music"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -39,22 +37,22 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Plastic Love dsadasdasdasdasdasdasd"
+                android:text="Plastic Love"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/ivItemImage"
-                app:layout_constraintTop_toTopOf="@+id/ivItemImage" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvSongArtist"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mariya Takeuchi"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:layout_marginTop="2dp"
+                android:text="Mariya Takeuchi"
                 app:layout_constraintStart_toStartOf="@+id/tvSongName"
                 app:layout_constraintTop_toBottomOf="@+id/tvSongName" />
 
@@ -62,30 +60,29 @@
                 android:id="@+id/tvSongDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
+                android:layout_marginTop="1dp"
                 android:text="03:00"
-                app:layout_constraintBottom_toBottomOf="@+id/tvSongArtist"
-                app:layout_constraintStart_toEndOf="@+id/tvSongArtist" />
+                app:layout_constraintStart_toStartOf="@+id/tvSongArtist"
+                app:layout_constraintTop_toBottomOf="@+id/tvSongArtist" />
 
             <com.wang.avi.AVLoadingIndicatorView
                 android:id="@+id/ivIsPlaying"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
-                android:layout_marginStart="64dp"
+                android:layout_marginStart="40dp"
                 app:indicatorColor="@color/colorSeekbar"
                 app:indicatorName="LineScalePulseOutIndicator"
                 app:layout_constraintStart_toEndOf="@+id/tvSongName"
                 app:layout_constraintTop_toTopOf="@+id/tvSongName" />
 
             <ImageView
-                android:id="@+id/ivDownload"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_baseline_download_24"
-                app:layout_constraintBottom_toBottomOf="@+id/tvSongName"
-                app:layout_constraintStart_toEndOf="@+id/tvSongName"
-                app:layout_constraintTop_toTopOf="@+id/tvSongName" />
+                android:id="@+id/ivOptionMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

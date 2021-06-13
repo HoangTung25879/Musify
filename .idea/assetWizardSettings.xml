@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/cloud_upload/baseline_cloud_upload_24.xml" />
+                                      <entry key="url" value="file:/C:/Users/HOANG%20TUNG/AppData/Local/Android/Sdk/icons/material/materialicons/delete/baseline_delete_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_baseline_cloud_upload_24" />
+                            <entry key="outputName" value="ic_baseline_delete_24" />
                             <entry key="sourceFile" value="D:\Musify" />
                           </map>
                         </option>

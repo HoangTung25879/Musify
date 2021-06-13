@@ -42,22 +42,21 @@ class OnlineSongAdapter  @Inject constructor(
         private val tvArtist = itemView.findViewById<TextView>(R.id.tvSongArtist)
         private val tvDuration = itemView.findViewById<TextView>(R.id.tvSongDuration)
         private val ivIsPlaying = itemView.findViewById<AVLoadingIndicatorView>(R.id.ivIsPlaying)
-        private val ivSongImage = itemView.findViewById<CircleImageView>(R.id.ivItemImage)
-        private val ivDownload = itemView.findViewById<ImageView>(R.id.ivDownload)
+        private val ivSongImage = itemView.findViewById<ImageView>(R.id.ivItemImage)
+        private val ivOptionMenu = itemView.findViewById<ImageView>(R.id.ivOptionMenu)
 
         fun bind(song: Song,glide: RequestManager,listener: SongAdapterListener?){
             itemView.setOnClickListener {
                 listener?.onItemClicked(song)
             }
-            ivDownload.setOnClickListener {
-                listener?.onDownloadClicked(song)
+            ivOptionMenu.setOnClickListener {
+                listener?.onMenuClicked(song,ivOptionMenu)
             }
             tvName.text = song.title
             tvArtist.text = song.subtitle
             tvDuration.text = durationFormat(song.duration)
             if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
             glide.load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(ivSongImage)
-            glide.load(R.drawable.ic_baseline_download_24).into(ivDownload)
         }
     }
 
@@ -73,6 +72,6 @@ class OnlineSongAdapter  @Inject constructor(
 
     interface SongAdapterListener{
         fun onItemClicked(song:Song)
-        fun onDownloadClicked(song: Song)
+        fun onMenuClicked(song: Song,view:View)
     }
 }

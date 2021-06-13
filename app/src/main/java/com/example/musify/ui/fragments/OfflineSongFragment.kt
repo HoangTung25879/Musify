@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -65,15 +66,33 @@ class OfflineSongFragment : Fragment() {
                 mainViewModel.playOrToggleSong(song)
             }
 
-            override fun onUploadClicked(song: Song) {
-                Config.currentSongSelect = song
-                val uploadDialog = UploadDialogFragment()
-                uploadDialog.isCancelable = false
-                uploadDialog.show(activity!!.supportFragmentManager,"UPLOAD")
+            override fun onMenuClicked(song: Song, view: View) {
+                openOptionMenu(song,view)
             }
+            //            override fun onUploadClicked(song: Song) {
+//                Config.currentSongSelect = song
+//                val uploadDialog = UploadDialogFragment()
+//                uploadDialog.isCancelable = false
+//                uploadDialog.show(activity!!.supportFragmentManager,"UPLOAD")
+//            }
         }
     }
-
+    private fun openOptionMenu(song: Song,view: View){
+        val popup = PopupMenu(context,view)
+        popup.inflate(R.menu.option_upload_menu)
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.upload->{
+                    true
+                }
+                R.id.delete->{
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
+    }
     private fun findSongPos(list: List<Song>,song:Song) : Int{
         list.forEachIndexed { index, item ->
             if(song.mediaId == item.mediaId &&

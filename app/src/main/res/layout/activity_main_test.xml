@@ -48,14 +48,13 @@
                 android:id="@+id/ivCurSongImage"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="@+id/vpSong"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/vpSong" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vpSong"
-                android:layout_width="299dp"
+                android:layout_width="280dp"
                 android:layout_height="56dp"
                 android:background="@color/colorBackground"
                 app:layout_constraintBottom_toBottomOf="@+id/viewSong"

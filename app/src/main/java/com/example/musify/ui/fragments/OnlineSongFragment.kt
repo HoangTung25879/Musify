@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -61,14 +62,34 @@ class OnlineSongFragment :Fragment(){
                 mainViewModel.playOrToggleSong(song)
             }
 
-            override fun onDownloadClicked(song: Song) {
-                Config.currentSongSelect = song
-                val downloadDialog = DownloadDialogFragment()
-                downloadDialog.isCancelable = false
-                downloadDialog.show(activity!!.supportFragmentManager,"DOWNLOAD")
+            override fun onMenuClicked(song: Song, view: View) {
+                openOptionMenu(song,view)
             }
+
+            //            override fun onDownloadClicked(song: Song) {
+//                Config.currentSongSelect = song
+//                val downloadDialog = DownloadDialogFragment()
+//                downloadDialog.isCancelable = false
+//                downloadDialog.show(activity!!.supportFragmentManager,"DOWNLOAD")
+//            }
         }
         binding.rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
+    }
+    private fun openOptionMenu(song: Song,view: View){
+        val popup = PopupMenu(context,view)
+        popup.inflate(R.menu.option_download_menu)
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.download->{
+                    true
+                }
+                R.id.delete->{
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
     private fun findSongPos(list: List<Song>,song:Song) : Int{
         list.forEachIndexed { index, item ->

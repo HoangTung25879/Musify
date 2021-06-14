@@ -65,7 +65,12 @@ class MainViewModel @ViewModelInject constructor(
         })
         updateCurrentPlayerPosition()
     }
-
+    fun fetchSongs(){
+        _mediaItems.postValue(Resource.loading(null))
+        val args = Bundle()
+        args.putInt("nRecNo",2)
+        musicServiceConnection.sendCommand("Add Songs",args)
+    }
     fun skipToNextSong(){
         if (Config.isShuffle){
             playOrToggleSong(randomSong()!!)
@@ -77,6 +82,9 @@ class MainViewModel @ViewModelInject constructor(
     //jump to time
     fun seekTo(pos:Long){
         musicServiceConnection.transportControls.seekTo(pos)
+    }
+    fun pause(){
+        musicServiceConnection.transportControls.pause()
     }
     //toggle to true to change play state
     fun playOrToggleSong(mediaItem:Song,toggle:Boolean = false){

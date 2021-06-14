@@ -107,17 +107,24 @@ class OnlineSongFragment :Fragment(){
         mainViewModel.mediaItems.observe(viewLifecycleOwner){ result->
             when(result.status){
                 Status.SUCCESS->{
-                    allSongsProgressBar.isVisible = false
-                    result.data?.let { songs->
-                        //display list song to view
-                        val onlineSongList = songs.filter { it.isLocal == false }
-                        Log.d(TAG,"${onlineSongList.size}")
-                        songAdapter.submitList(onlineSongList)
-                        tvEmptyOnline.isVisible = onlineSongList.size == 0
+                    binding.apply {
+                        rvAllSongs.isVisible = true
+                        allSongsProgressBar.isVisible = false
+                        result.data?.let { songs->
+                            //display list song to view
+                            val onlineSongList = songs.filter { it.isLocal == false }
+                            songAdapter.submitList(onlineSongList)
+                            tvEmptyOnline.isVisible = onlineSongList.size == 0
+                        }
                     }
                 }
                 Status.ERROR -> Unit
-                Status.LOADING -> allSongsProgressBar.isVisible = true
+                Status.LOADING -> {
+                    binding.apply {
+                        allSongsProgressBar.isVisible = true
+                        rvAllSongs.isVisible = false
+                    }
+                }
             }
         }
         mainViewModel.currPlayingSong.observe(viewLifecycleOwner){

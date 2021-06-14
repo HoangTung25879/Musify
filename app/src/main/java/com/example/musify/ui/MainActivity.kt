@@ -1,5 +1,6 @@
 package com.example.musify.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG,"ONCREATE")
         NoInternetDialogSignal.Builder(this,lifecycle).apply {
             dialogProperties.apply {
                 connectionCallback = object : ConnectionCallback{
@@ -171,6 +173,7 @@ class MainActivity : AppCompatActivity() {
                             viewSong.isVisible = true
                             Config.isInitial = false
                             result.data?.let { songs ->
+                                Log.d(TAG,"RELOAD")
                                 Config.currentSongList = songs
                                 swipeSongAdapter.submitList(songs)
                                 //because if songlist empty and we want to display image from first song app will crash
@@ -190,6 +193,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.currPlayingSong.observe(this) {
             if (it == null) return@observe
             currPlayingSong = it.toSong()
+            Log.d("MUSICSOURCE", "currplaysong $currPlayingSong")
             binding.apply {
                 glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
             }

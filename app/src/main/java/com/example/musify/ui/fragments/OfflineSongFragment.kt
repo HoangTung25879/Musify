@@ -93,6 +93,12 @@ class OfflineSongFragment : Fragment() {
         val uploadDialog = UploadDialogFragment()
         uploadDialog.isCancelable = false
         uploadDialog.show(requireActivity().supportFragmentManager,"UPLOAD")
+        uploadDialog.callback = object : UploadDialogFragment.Callback {
+            override fun onFinishUpload() {
+                mainViewModel.pause()
+                mainViewModel.fetchSongs()
+            }
+        }
     }
     private fun findSongPos(list: List<Song>,song:Song) : Int{
         list.forEachIndexed { index, item ->

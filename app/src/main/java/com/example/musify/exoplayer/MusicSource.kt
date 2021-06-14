@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.example.musify.data.Constants.DURATION
 import com.example.musify.data.Constants.IS_LOCAL
+import com.example.musify.data.Constants.MEDIA_ROOT_ID
 import com.example.musify.data.MusicDatabase
 import com.example.musify.data.entities.Song
 import com.example.musify.exoplayer.State.*
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val TAG = "MUSICSOURCE"
 class MusicSource { // list of song get from firebase
     private val musicDatabase = MusicDatabase()
     //song list of type MediaMetaDataCompat to use in music service (contain metadata of song)
@@ -52,8 +54,8 @@ class MusicSource { // list of song get from firebase
         val allSong = mutableListOf<Song>()
         allSong.addAll(firebaseSongs)
         allSong.addAll(localSongs)
-        Log.d("MusicSource","${allSong.size}")
         songs = allSong.map { song->
+            Log.d(TAG,"fetch ${song}")
             Builder()
                 .putString(METADATA_KEY_ARTIST,song.subtitle)
                 .putString(METADATA_KEY_MEDIA_ID,song.mediaId)
@@ -68,6 +70,7 @@ class MusicSource { // list of song get from firebase
                     .putString(IS_LOCAL,song.isLocal.toString())
                 .build()
         }
+        MusicService.musicServiceInstance?.notifyChildrenChanged(MEDIA_ROOT_ID)
         state = STATE_INITIALIZED
     }
     //convert songs list to media source for exoplayer prepare in MusicService.kt (basically create playlist of song by concantenate song)

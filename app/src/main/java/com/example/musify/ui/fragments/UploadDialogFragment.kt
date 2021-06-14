@@ -13,6 +13,7 @@ import android.view.Window
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.musify.Config
 import com.example.musify.R
 import com.example.musify.URIPathHelper
@@ -20,6 +21,7 @@ import com.example.musify.data.Constants
 import com.example.musify.data.entities.Song
 import com.example.musify.databinding.FragmentCustomDialogBinding
 import com.example.musify.randomNumber
+import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -33,6 +35,11 @@ private const val TAG = "UPLOADDIALOGFRAGMENT"
 class UploadDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentCustomDialogBinding
+    interface Callback{
+        fun onFinishUpload()
+    }
+    var callback : Callback? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,7 +93,7 @@ class UploadDialogFragment : DialogFragment() {
                 "subtitle" to "${song?.subtitle}",
                 "songUrl" to "$downloadUri",
                 "mediaId" to "$mediaId",
-                "imageUrl" to " ",
+                "imageUrl" to "",
                 "duration" to "${song?.duration}"
         )
         db.collection(Constants.SONG_COLLECTION).document("song${mediaId}")
@@ -94,14 +101,14 @@ class UploadDialogFragment : DialogFragment() {
                 .addOnSuccessListener {
                     Log.d(TAG,"Write document success")
                     btnAcceptUpload.doResult(true)
-                    delayThenDismiss()
+                    delayThenDismiss(true)
                 }.addOnFailureListener { e ->
                     Log.w(TAG,"Error writing document",e)
                     btnAcceptUpload.doResult(false)
                     delayThenDismiss()
                 }
     }
-    private fun delayThenDismiss(){
+    private fun delayThenDismiss(isSuccess: Boolean = false){
         binding.apply {
             btnAcceptDownload.isClickable = false
             btnAcceptUpload.isClickable = false
@@ -110,6 +117,9 @@ class UploadDialogFragment : DialogFragment() {
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000)
             withContext(Dispatchers.Main){
+                if (isSuccess){
+                    callback?.onFinishUpload()
+                }
                 dismiss()
             }
         }

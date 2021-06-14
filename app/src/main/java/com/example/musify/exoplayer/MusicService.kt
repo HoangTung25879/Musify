@@ -30,9 +30,10 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import java.lang.Exception
 import javax.inject.Inject
 
-private const val SERVICE_TAG = "MusicService"
+private const val SERVICE_TAG = "MUSICSERVICE"
 //a Service that manages the player and handles preparing and playing media
 @AndroidEntryPoint
 class MusicService: MediaBrowserServiceCompat(){
@@ -71,7 +72,6 @@ class MusicService: MediaBrowserServiceCompat(){
         //create a MediaSession and get it’s token.
         super.onCreate()
         musicServiceInstance = this
-        Log.d(SERVICE_TAG,"ONCREATE")
         //coroutine fetch song
         serviceScope.launch {
             musicSource.fetchMediaData(applicationContext)
@@ -129,13 +129,11 @@ class MusicService: MediaBrowserServiceCompat(){
             }
         })
     }
-
     private fun preparePlayer(
             songs:List<MediaMetadataCompat>,
             itemToPlay: MediaMetadataCompat?,
             playNow: Boolean //usually pass false for first time and let user choose to play when already play and switch song pass true
     ){
-        Log.d(SERVICE_TAG,"PREPAREPLAYER")
         val currSongIndex = if (currPlayingSong == null) 0 else songs.indexOf(itemToPlay)
         exoPlayer.prepare(musicSource.asMediaSource(dataSourceFactory))
         exoPlayer.seekTo(currSongIndex,0L) // 0L = number 0 of type long // play from beginning
@@ -166,7 +164,6 @@ class MusicService: MediaBrowserServiceCompat(){
         // Returning null == no one can connect
         // so we’ll return something
         //must return a non-null BrowserRoot to allow connections to your MediaBrowserServiceCompat
-        Log.d(SERVICE_TAG,"ONGETROOT")
         return BrowserRoot(MEDIA_ROOT_ID,null)
     }
 
@@ -184,11 +181,15 @@ class MusicService: MediaBrowserServiceCompat(){
                         //Each item returned is a MediaItem and each MediaItem consists of a MediaDescriptionCompat (a subset of metadata) and some combination of the two available flags:
                         //FLAG_BROWSABLE indicates that this MediaItem has children of its own (i.e., its media id can be passed to onLoadChildren() to get more MediaItems.
                         //FLAG_PLAYABLE should be used when this MediaItem can be directly played (i.e., passed to playFromMediaId() to start playback)
-                        result.sendResult(musicSource.asMediaItem())
-                        if(!isPlayerInitialized && musicSource.songs.isNotEmpty()){
-                            preparePlayer(musicSource.songs,musicSource.songs[0],playNow = false)
-                            isPlayerInitialized = true
-                        }
+                            try {
+                                result.sendResult(musicSource.asMediaItem())
+                                if(!isPlayerInitialized && musicSource.songs.isNotEmpty()){
+                                    preparePlayer(musicSource.songs,musicSource.songs[0],playNow = false)
+                                    isPlayerInitialized = true
+                                }
+                            }catch (exception : Exception){
+                                notifyChildrenChanged(MEDIA_ROOT_ID)
+                            }
                     } else{
                         mediaSession.sendSessionEvent(NETWORK_ERROR,null)
                         result.sendResult(null)
@@ -220,8 +221,17 @@ class MusicService: MediaBrowserServiceCompat(){
         }
     }
     private inner class MusicPlaybackPreparer(private val playerPrepared: (MediaMetadataCompat?)->Unit) : MediaSessionConnector.PlaybackPreparer {
-        //dont need
-        override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?) = false
+
+        override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?):Boolean{
+            when (command){
+                "Add Songs" ->{
+                    serviceScope.launch {
+                        musicSource.fetchMediaData(applicationContext)
+                    }
+                }
+            }
+            return false
+        }
 
         override fun getSupportedPrepareActions(): Long {
             return PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or

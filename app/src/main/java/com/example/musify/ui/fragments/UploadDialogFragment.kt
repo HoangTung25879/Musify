@@ -36,9 +36,11 @@ class UploadDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentCustomDialogBinding
     interface Callback{
-        fun onFinishUpload()
+        fun onFinishUpload(isSuccess: Boolean)
     }
     var callback : Callback? = null
+    var song = Config.currentSongSelect
+    var songList = Config.currentSongList
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,12 +50,13 @@ class UploadDialogFragment : DialogFragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_custom_dialog,container,false)
         binding.apply {
             tvTitle.text = "Upload"
-            tvDescribe.text = "Do you want to upload ${Config.currentSongSelect?.title}?"
+            tvDescribe.text = "Do you want to upload ${song?.title}?"
             btnAcceptUpload.isVisible = true
             btnCancel.setOnClickListener {
                 dismiss()
             }
             btnAcceptUpload.setOnClickListener {
+                btnCancel.isClickable = false
                 btnAcceptUpload.startLoading()
                 uploadSong()
             }
@@ -61,30 +64,63 @@ class UploadDialogFragment : DialogFragment() {
         return binding.root
     }
     private fun uploadSong(){
-        val song = Config.currentSongSelect
-        val onlineSongSize = Config.currentSongList?.filter { it.isLocal == false }?.size
+        val onlineSongSize = songList?.filter { it.isLocal == false }?.size
         val mediaId = (onlineSongSize ?: randomNumber()) + 1
         val storageRef = Firebase.storage.reference
-        var audioPath = URIPathHelper().getPath(requireContext(), Uri.parse(Config.currentSongSelect?.songUrl))
+        var audioPath = URIPathHelper().getPath(requireContext(), Uri.parse(song?.songUrl))
         var file = Uri.fromFile(File(audioPath!!))
         val songRef = storageRef.child("song/${file.lastPathSegment}")
-        var uploadTask = songRef.putFile(file)
-        uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
+        val listSongRef = storageRef.child("song")
+        listSongRef.listAll().addOnSuccessListener { it ->
+            it.items.forEach { item ->
+                if(file.lastPathSegment == item.name){
+                    val downloadUri = item.downloadUrl
+                    downloadUri.addOnSuccessListener {
+                        writeToFirestore(song,it,mediaId)
+                    }.addOnFailureListener {
+                        var uploadTask = songRef.putFile(file)
+                        uploadTask.continueWithTask { task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let {
+                                    throw it
+                                }
+                            }
+                            songRef.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result
+                                writeToFirestore(song,downloadUri,mediaId)
+                            } else {
+                                binding.btnAcceptUpload?.doResult(false)
+                                delayThenDismiss(false)
+                            }
+                        }
+                    }
+                } else {
+                    var uploadTask = songRef.putFile(file)
+                    uploadTask.continueWithTask { task ->
+                        if (!task.isSuccessful) {
+                            task.exception?.let {
+                                throw it
+                            }
+                        }
+                        songRef.downloadUrl
+                    }.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val downloadUri = task.result
+                            writeToFirestore(song,downloadUri,mediaId)
+                        } else {
+                            binding.btnAcceptUpload?.doResult(false)
+                            delayThenDismiss(false)
+                        }
+                    }
                 }
             }
-            songRef.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val downloadUri = task.result
-                writeToFirestore(song,downloadUri,mediaId)
-            } else {
-                btnAcceptUpload.doResult(false)
-                delayThenDismiss()
-            }
+        }.addOnFailureListener {
+            binding.btnAcceptUpload?.doResult(false)
+            delayThenDismiss(false)
         }
+
     }
     private fun writeToFirestore(song: Song?,downloadUri: Uri?,mediaId : Int){
         val db = Firebase.firestore
@@ -100,26 +136,25 @@ class UploadDialogFragment : DialogFragment() {
                 .set(songData)
                 .addOnSuccessListener {
                     Log.d(TAG,"Write document success")
-                    btnAcceptUpload.doResult(true)
+                    binding.btnAcceptUpload?.doResult(true)
                     delayThenDismiss(true)
                 }.addOnFailureListener { e ->
                     Log.w(TAG,"Error writing document",e)
-                    btnAcceptUpload.doResult(false)
-                    delayThenDismiss()
+                    binding.btnAcceptUpload.doResult(false)
+                    delayThenDismiss(false)
                 }
     }
     private fun delayThenDismiss(isSuccess: Boolean = false){
         binding.apply {
             btnAcceptDownload.isClickable = false
             btnAcceptUpload.isClickable = false
+            btnAcceptDelete.isClickable = false
             btnCancel.isClickable = false
         }
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000)
             withContext(Dispatchers.Main){
-                if (isSuccess){
-                    callback?.onFinishUpload()
-                }
+                callback?.onFinishUpload(isSuccess)
                 dismiss()
             }
         }

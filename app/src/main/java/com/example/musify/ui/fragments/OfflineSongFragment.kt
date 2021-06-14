@@ -81,6 +81,7 @@ class OfflineSongFragment : Fragment() {
                     true
                 }
                 R.id.delete->{
+                    onDeleteClicked(song)
                     true
                 }
                 else -> false
@@ -94,9 +95,25 @@ class OfflineSongFragment : Fragment() {
         uploadDialog.isCancelable = false
         uploadDialog.show(requireActivity().supportFragmentManager,"UPLOAD")
         uploadDialog.callback = object : UploadDialogFragment.Callback {
-            override fun onFinishUpload() {
-                mainViewModel.pause()
-                mainViewModel.fetchSongs()
+            override fun onFinishUpload(isSuccess: Boolean) {
+                if (isSuccess){
+                    mainViewModel.pause()
+                    mainViewModel.fetchSongs()
+                }
+            }
+        }
+    }
+    private fun onDeleteClicked(song: Song){
+        Config.currentSongSelect = song
+        val deleteDialog = DeleteDiaglogFragment()
+        deleteDialog.isCancelable = false
+        deleteDialog.show(requireActivity().supportFragmentManager,"DELETE")
+        deleteDialog.callback = object : DeleteDiaglogFragment.Callback{
+            override fun onFinishDelete(isSuccess: Boolean) {
+                if (isSuccess){
+                    mainViewModel.pause()
+                    mainViewModel.fetchSongs()
+                }
             }
         }
     }

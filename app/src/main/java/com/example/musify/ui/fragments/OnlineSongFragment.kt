@@ -84,12 +84,27 @@ class OnlineSongFragment :Fragment(){
                     true
                 }
                 R.id.delete->{
+                    onDeleteClicked(song)
                     true
                 }
                 else -> false
             }
         }
         popup.show()
+    }
+    private fun onDeleteClicked(song: Song){
+        Config.currentSongSelect = song
+        val deleteDialog = DeleteDiaglogFragment()
+        deleteDialog.isCancelable = false
+        deleteDialog.show(requireActivity().supportFragmentManager,"DELETE")
+        deleteDialog.callback = object : DeleteDiaglogFragment.Callback{
+            override fun onFinishDelete(isSuccess: Boolean) {
+                if (isSuccess){
+                    mainViewModel.pause()
+                    mainViewModel.fetchSongs()
+                }
+            }
+        }
     }
     private fun findSongPos(list: List<Song>,song:Song) : Int{
         list.forEachIndexed { index, item ->

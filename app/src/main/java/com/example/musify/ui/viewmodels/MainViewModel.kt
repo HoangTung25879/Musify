@@ -60,6 +60,7 @@ class MainViewModel @ViewModelInject constructor(
                         duration = duration!!
                     )
                 }
+                Config.currentSongList = items
                 _mediaItems.postValue(Resource.success(items))
             }
         })

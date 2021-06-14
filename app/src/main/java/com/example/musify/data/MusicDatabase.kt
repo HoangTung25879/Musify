@@ -14,6 +14,7 @@ import com.example.musify.data.entities.Song
 import com.example.musify.sdk29AndUp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -22,28 +23,16 @@ import java.lang.Exception
 
 private const val TAG = "MUSICDATABASE"
 class MusicDatabase {
-    private val firestore = FirebaseFirestore.getInstance()
+    private val firestore = Firebase.firestore
     private val songCollection = firestore.collection(SONG_COLLECTION)
-    suspend fun getFirebaseSongs(): List<Song> {
-        if(Config.isConnected == false){
-            return mutableListOf<Song>()
-        }
-        return try {
-            songCollection.get().await().toObjects(Song::class.java)
-        } catch (e: Exception) {
+    suspend fun getFirebaseSongs(): List<Song>{
+        return try{
+            val songList = songCollection.get().await().toObjects<Song>()
+            songList
+        } catch (e : Exception){
             mutableListOf<Song>()
         }
     }
-//    private val firestore = Firebase.firestore
-//    private val songCollection = firestore.collection(SONG_COLLECTION)
-//    suspend fun getFirebaseSongs(): List<Song>{
-//        val songList = mutableListOf<Song>()
-//        songCollection.get().addOnSuccessListener { documents ->
-//            for (document in documents){
-//                songList.add(document.toObject(Song::class.java))
-//            }
-//        }
-//    }
 
     fun getLocalSongs(context: Context): List<Song> {
         val songList = mutableListOf<Song>()

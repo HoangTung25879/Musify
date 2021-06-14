@@ -174,7 +174,6 @@ class MainActivity : AppCompatActivity() {
                             Config.isInitial = false
                             result.data?.let { songs ->
                                 Log.d(TAG,"RELOAD")
-                                Config.currentSongList = songs
                                 swipeSongAdapter.submitList(songs)
                                 //because if songlist empty and we want to display image from first song app will crash
                                 if (songs.isNotEmpty()) {

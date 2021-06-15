@@ -105,9 +105,6 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-ui:2.11.8"
     api "com.google.android.exoplayer:extension-mediasession:2.11.8"
 
-    //Round Image
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-
     //AVLOADING
     implementation 'com.wang.avi:library:2.1.3'
     //album-cover-equalizer-view
@@ -118,6 +115,8 @@ dependencies {
     implementation 'com.github.timonknispel:KTLoadingButton:1.2.0'
     //OOps No Internet
     implementation 'org.imaginativeworld.oopsnointernet:oopsnointernet:2.0.0'
+    //AnimatedBottomBar
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
 }
 repositories {
     mavenCentral()

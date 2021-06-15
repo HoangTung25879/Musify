@@ -73,6 +73,7 @@ class MainViewModel @ViewModelInject constructor(
         musicServiceConnection.sendCommand("Add Songs",args)
     }
     fun skipToNextSong(){
+        Log.d(TAG,"skipToNext")
         if (Config.isShuffle){
             playOrToggleSong(randomSong()!!)
         } else musicServiceConnection.transportControls.skipToNext()
@@ -89,6 +90,7 @@ class MainViewModel @ViewModelInject constructor(
     }
     //toggle to true to change play state
     fun playOrToggleSong(mediaItem:Song,toggle:Boolean = false){
+        Config.isLocal = mediaItem.isLocal
         val isPrepared = playbackState.value?.isPrepared ?: false //playbackState.value : get value from live data object
         if (isPrepared && mediaItem.mediaId == currPlayingSong?.value?.getString(METADATA_KEY_MEDIA_ID)){
             //toggle play pause current song
@@ -101,7 +103,6 @@ class MainViewModel @ViewModelInject constructor(
             }
         } else {
             //play new song
-                Config.isLocal = mediaItem.isLocal
             musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId,null)
         }
     }

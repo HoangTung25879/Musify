@@ -14,7 +14,6 @@ import com.example.musify.R
 import com.example.musify.data.entities.Song
 import com.example.musify.durationFormat
 import com.wang.avi.AVLoadingIndicatorView
-import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
 
 private const val TAG = "ONLINESONGADAPTER"
@@ -56,7 +55,8 @@ class OnlineSongAdapter  @Inject constructor(
             tvArtist.text = song.subtitle
             tvDuration.text = durationFormat(song.duration)
             if (song.isPlaying) ivIsPlaying.smoothToShow() else ivIsPlaying.smoothToHide()
-            glide.load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(ivSongImage)
+//            glide.load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(ivSongImage)
+            glide.load(R.drawable.music).into(ivSongImage)
         }
     }
 

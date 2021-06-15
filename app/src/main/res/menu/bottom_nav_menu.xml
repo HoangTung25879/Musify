@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/online_song"
-        android:icon="@drawable/ic_firebase"
         android:title="Online Songs"
+        android:icon="@drawable/ic_firebase"
         />
     <item
         android:id="@+id/offline_song"
-        android:icon="@drawable/ic_bai_hat"
         android:title="Offline Songs"
+        android:icon="@drawable/ic_bai_hat"
         />
 </menu>

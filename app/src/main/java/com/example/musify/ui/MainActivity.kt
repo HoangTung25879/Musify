@@ -1,6 +1,5 @@
 package com.example.musify.ui
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
@@ -20,7 +19,7 @@ import com.example.musify.adapter.SwipeSongAdapter
 import com.example.musify.adapter.ViewPagerAdapter
 import com.example.musify.data.Status.*
 import com.example.musify.data.entities.Song
-import com.example.musify.databinding.ActivityMainTestBinding
+import com.example.musify.databinding.ActivityMainBinding
 import com.example.musify.exoplayer.isPlaying
 import com.example.musify.exoplayer.toSong
 import com.example.musify.ui.viewmodels.MainViewModel
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var glide: RequestManager
 
-    private lateinit var binding: ActivityMainTestBinding
+    private lateinit var binding: ActivityMainBinding
 
     private var currPlayingSong: Song? = null
 
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             }
         }.build()
         subscribeToObservers()
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main_test)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
         binding.apply {
             setupViewPager()
             navController = (supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment).navController
@@ -110,38 +109,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            bottomNavigation.setOnNavigationItemSelectedListener {
-                when(it.itemId){
-                    R.id.online_song ->{
-                        userViewPager.currentItem = ViewPagerAdapter.ONLINE_PAGE
-                        true
-                    }
-                    R.id.offline_song ->{
-                        userViewPager.currentItem = ViewPagerAdapter.OFFLINE_PAGE
-                        true
-                    }
-                    else -> false
-                }
-            }
         }
 
     }
     private fun setupViewPager(){
         binding.apply {
-            val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-            userViewPager.adapter = viewPagerAdapter
-            userViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-                override fun onPageSelected(position: Int) {
-                    when(position){
-                        ViewPagerAdapter.ONLINE_PAGE -> bottomNavigation.menu.findItem(R.id.online_song).isChecked = true
-                        ViewPagerAdapter.OFFLINE_PAGE -> bottomNavigation.menu.findItem(R.id.offline_song).isChecked = true
-                    }
-                }
-
-                override fun onPageScrollStateChanged(state: Int) {}
-            })
+            userViewPager.adapter = ViewPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+            bottomNavigation.setupWithViewPager(userViewPager)
         }
     }
     private fun hideBottomBar(){
@@ -177,8 +151,7 @@ class MainActivity : AppCompatActivity() {
                                 swipeSongAdapter.submitList(songs)
                                 //because if songlist empty and we want to display image from first song app will crash
                                 if (songs.isNotEmpty()) {
-                                glide.load((currPlayingSong ?: songs[0]).imageUrl)
-                                    .into(ivCurSongImage)
+                                    glide.load(R.drawable.music).into(ivCurSongImage)
                                 }
                                 switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
                             }
@@ -194,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             currPlayingSong = it.toSong()
             Log.d("MUSICSOURCE", "currplaysong $currPlayingSong")
             binding.apply {
-                glide.load(currPlayingSong?.imageUrl).into(ivCurSongImage)
+                glide.load(R.drawable.music).into(ivCurSongImage)
             }
             switchViewPagerToCurrentSong(currPlayingSong ?: return@observe)
         }

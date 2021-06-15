@@ -151,7 +151,8 @@ class MusicService: MediaBrowserServiceCompat(){
             isActive = false
             release()
         }
-        serviceScope.cancel()
+//        serviceScope.cancel()
+        serviceJob.cancel()
         exoPlayer.removeListener(musicPlayerEventListener)
         exoPlayer.release()
     }

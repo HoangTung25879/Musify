@@ -66,12 +66,6 @@ class OnlineSongFragment :Fragment(){
                 openOptionMenu(song,view)
             }
 
-            //            override fun onDownloadClicked(song: Song) {
-//                Config.currentSongSelect = song
-//                val downloadDialog = DownloadDialogFragment()
-//                downloadDialog.isCancelable = false
-//                downloadDialog.show(activity!!.supportFragmentManager,"DOWNLOAD")
-//            }
         }
         binding.rvAllSongs.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -81,6 +75,7 @@ class OnlineSongFragment :Fragment(){
         popup.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.download->{
+                    onDownloadClicked(song)
                     true
                 }
                 R.id.delete->{
@@ -99,6 +94,20 @@ class OnlineSongFragment :Fragment(){
         deleteDialog.show(requireActivity().supportFragmentManager,"DELETE")
         deleteDialog.callback = object : DeleteDiaglogFragment.Callback{
             override fun onFinishDelete(isSuccess: Boolean) {
+                if (isSuccess){
+                    mainViewModel.pause()
+                    mainViewModel.fetchSongs()
+                }
+            }
+        }
+    }
+    private fun onDownloadClicked(song: Song){
+        Config.currentSongSelect = song
+        val downloadDialog = DownloadDialogFragment()
+        downloadDialog.isCancelable = false
+        downloadDialog.show(requireActivity().supportFragmentManager,"DOWNLOAD")
+        downloadDialog.callback = object : DownloadDialogFragment.Callback{
+            override fun onFinishDownload(isSuccess: Boolean) {
                 if (isSuccess){
                     mainViewModel.pause()
                     mainViewModel.fetchSongs()

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musify.R
 import com.example.musify.data.entities.Song
+import com.google.android.material.textview.MaterialTextView
 
 class SwipeSongAdapter : ListAdapter<Song, SwipeSongAdapter.SongViewHolder>(
     SongAdapterDiffUtilCallback()
@@ -32,10 +33,11 @@ class SwipeSongAdapter : ListAdapter<Song, SwipeSongAdapter.SongViewHolder>(
     }
 
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvTitle = itemView.findViewById<TextView>(R.id.tvPrimary)
+        private val tvTitle = itemView.findViewById<MaterialTextView>(R.id.tvPrimary)
         fun bind(song: Song,listener: SongAdapterListener?){
             val text = "${song.title} - ${song.subtitle}"
             tvTitle.text = text
+            tvTitle.isSelected = true
             itemView.setOnClickListener {
                 listener?.onItemClicked(song)
             }

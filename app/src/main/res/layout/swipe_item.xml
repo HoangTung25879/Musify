@@ -7,8 +7,12 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvPrimary"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
         android:gravity="center"
         android:text="Title"
         android:textSize="20sp"

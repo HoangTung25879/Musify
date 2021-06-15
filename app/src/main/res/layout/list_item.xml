@@ -40,19 +40,19 @@
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Plastic Love"
+                android:text="Plastic Lovsdasdasdasdasd"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/ivItemImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvSongArtist"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Mariya Takeuchi"
+                android:text="Mariya Takeuchidsadasdasdasddasdasd"
                 app:layout_constraintStart_toStartOf="@+id/tvSongName"
                 app:layout_constraintTop_toBottomOf="@+id/tvSongName" />
 

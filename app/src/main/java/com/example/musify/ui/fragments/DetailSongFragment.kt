@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentOnAttachListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bullhead.equalizer.DialogEqualizerFragment
 import com.bumptech.glide.RequestManager
@@ -59,6 +60,7 @@ class DetailSongFragment:Fragment() {
     private var shouldUpdateSeekbar : Boolean = true
     private var job: Job? = null
     private var equalizerFragment : DialogEqualizerFragment? = null
+    private lateinit var navHostFragment : Fragment
 
 
     override fun onCreateView(
@@ -112,6 +114,7 @@ class DetailSongFragment:Fragment() {
             ivNextSong.setOnClickListener {
                 mainViewModel.skipToNextSong()
             }
+            navHostFragment = parentFragmentManager.findFragmentById(R.id.navHostFragment)!!
             ivBackBtn.setOnClickListener {
                 navHostFragment.findNavController().popBackStack()
             }
@@ -143,8 +146,8 @@ class DetailSongFragment:Fragment() {
             tvSongArtist.text = song.subtitle
             glide.asBitmap().load(if(song.imageUrl == "") R.drawable.music else song.imageUrl).into(object : CustomTarget<Bitmap>(){
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    ivSongImage.setCoverImage(resource!!)
-                    ivSongImageDefault.setImageBitmap(resource!!)
+                    ivSongImage.setCoverImage(resource)
+                    ivSongImageDefault.setImageBitmap(resource)
                 }
                 override fun onLoadCleared(placeholder: Drawable?) {
                     TODO("Not yet implemented")

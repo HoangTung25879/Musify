@@ -43,7 +43,7 @@ class MusicDatabase {
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.DURATION
+                MediaStore.Audio.Media.DURATION,
         )
         val selection = MediaStore.Audio.Media.IS_MUSIC + "=1 OR " + MediaStore.Audio.Media.IS_PODCAST + "=1"
         val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
@@ -59,6 +59,7 @@ class MusicDatabase {
             val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
             val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+
             while (cursor.moveToNext()) {
                 val id = cursor.getString(idColumn)
                 val artist = cursor.getString(artistColumn)
@@ -68,11 +69,6 @@ class MusicDatabase {
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         id.toLong()
                 ).toString()
-                //29 - NangTho-HoangDung-6413381 - Nàng Thơ (Single) - Hoàng Dũng - content://media/external/audio/media/29 - 254511 - Nàng Thơ - Nhạc Trẻ - null
-                //30 - SaiGonDauLongQua-HuaKimTuyenHoangDuyen-6992977 - NhacCuaTui.com - Hứa Kim Tuyền, Hoàng Duyên - content://media/external/audio/media/30 - 308736 - Sài Gòn Đau Lòng Quá - Nhạc Trẻ - null
-                //28 - ThanhXuan-DaLAB-5773854 - Thanh Xuan - Da LAB - content://media/external/audio/media/28 - 220552 - Thanh Xuan - R&B/Hip Hop/Rap - null
-                // 27 - ThichQuaRoiNa-TlinhTrungTranWxrdieNgerPacman-6413849 - NhacCuaTui.com - Tlinh, Trung Trần, Wxrdie, Nger, Pacman - content://media/external/audio/media/27 - 177450 - Thích Quá Rồi Nà - Nhạc Trẻ - null
-//                Log.d(TAG, "$id - $artist - $contentUri - $title - $duration")
                 songList += Song(mediaId = id, subtitle = artist, title=title, songUrl = contentUri,isLocal = true,duration = duration)
             }
         }

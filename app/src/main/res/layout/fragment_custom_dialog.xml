@@ -16,7 +16,8 @@
 
         <TextView
             android:id="@+id/tvDescribe"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
+            android:gravity="center"
             android:layout_height="wrap_content"
             android:text="Do you want to download song?"
             android:textColor="@color/black"

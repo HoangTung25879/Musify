@@ -59,8 +59,11 @@ fun durationFormat(duration:String):String{
     val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     return dateFormat.format(duration.toLong())
 }
-fun randomNumber(): Int{
-    val start = 60
-    val end = 500
-    return (Math.random() * (end - start + 1)).toInt() + start
+fun generateRandomString(): String {
+    val chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    var passWord = ""
+    for (i in 0..10) {
+        passWord += chars[Math.floor(Math.random() * chars.length).toInt()]
+    }
+    return passWord
 }

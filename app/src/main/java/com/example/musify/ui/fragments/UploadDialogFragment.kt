@@ -14,13 +14,10 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.musify.Config
-import com.example.musify.R
-import com.example.musify.URIPathHelper
+import com.example.musify.*
 import com.example.musify.data.Constants
 import com.example.musify.data.entities.Song
 import com.example.musify.databinding.FragmentCustomDialogBinding
-import com.example.musify.randomNumber
 import com.example.musify.ui.viewmodels.MainViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -64,68 +61,33 @@ class UploadDialogFragment : DialogFragment() {
         return binding.root
     }
     private fun uploadSong(){
-        val onlineSongSize = songList?.filter { it.isLocal == false }?.size
-        val mediaId = (onlineSongSize ?: randomNumber()) + 1
+        val mediaId = generateRandomString()
         val storageRef = Firebase.storage.reference
         var audioPath = URIPathHelper().getPath(requireContext(), Uri.parse(song?.songUrl))
         var file = Uri.fromFile(File(audioPath!!))
         val songRef = storageRef.child("song/${file.lastPathSegment}")
-        val listSongRef = storageRef.child("song")
-        listSongRef.listAll().addOnSuccessListener { it ->
-            it.items.forEach { item ->
-                if(file.lastPathSegment == item.name){
-                    val downloadUri = item.downloadUrl
-                    downloadUri.addOnSuccessListener {
-                        writeToFirestore(song,it,mediaId)
-                    }.addOnFailureListener {
-                        var uploadTask = songRef.putFile(file)
-                        uploadTask.continueWithTask { task ->
-                            if (!task.isSuccessful) {
-                                task.exception?.let {
-                                    throw it
-                                }
-                            }
-                            songRef.downloadUrl
-                        }.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val downloadUri = task.result
-                                writeToFirestore(song,downloadUri,mediaId)
-                            } else {
-                                binding.btnAcceptUpload?.doResult(false)
-                                delayThenDismiss(false)
-                            }
-                        }
-                    }
-                } else {
-                    var uploadTask = songRef.putFile(file)
-                    uploadTask.continueWithTask { task ->
-                        if (!task.isSuccessful) {
-                            task.exception?.let {
-                                throw it
-                            }
-                        }
-                        songRef.downloadUrl
-                    }.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val downloadUri = task.result
-                            writeToFirestore(song,downloadUri,mediaId)
-                        } else {
-                            binding.btnAcceptUpload?.doResult(false)
-                            delayThenDismiss(false)
-                        }
-                    }
+        var uploadTask = songRef.putFile(file)
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
                 }
             }
-        }.addOnFailureListener {
-            binding.btnAcceptUpload?.doResult(false)
-            delayThenDismiss(false)
+            songRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUri = task.result
+                writeToFirestore(song,downloadUri,mediaId)
+            } else {
+                binding.btnAcceptUpload?.doResult(false)
+                delayThenDismiss(false)
+            }
         }
-
     }
-    private fun writeToFirestore(song: Song?,downloadUri: Uri?,mediaId : Int){
+    private fun writeToFirestore(song: Song?,downloadUri: Uri?,mediaId: String){
         val db = Firebase.firestore
         val songData = hashMapOf(
-            "title" to "${song?.title}",
+                "title" to "${song?.title}",
                 "subtitle" to "${song?.subtitle}",
                 "songUrl" to "$downloadUri",
                 "mediaId" to "$mediaId",

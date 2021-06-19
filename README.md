@@ -11,6 +11,7 @@ II. Main function:
   2. Player UI.
   3. Download/Upload/Delete Song.
   4. Shuffle/Repeat mode.
+  5. Audio Equalizer
 
 III. Task:<br/> 
 Phạm Khắc Hoàng Tùng-1720252 : Project Structure,App Architecture<br/> 
@@ -19,4 +20,5 @@ Nguyễn Hữu Đức-1720057: fetch song, list item<br/>
 Phạm Hồng Ân-1720025 : layout UI<br/> 
 Nguyễn Văn Hải-1720078: fetch song, list item<br/> 
 
-IV. DEMO  
+IV. DEMO<br/>
+<img src="BAOCAO/demo.gif" width="320" height="700"/> 

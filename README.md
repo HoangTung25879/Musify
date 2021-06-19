@@ -21,4 +21,8 @@ Phạm Hồng Ân-1720025 : layout UI<br/>
 Nguyễn Văn Hải-1720078: fetch song, list item<br/> 
 
 IV. DEMO<br/>
-<img src="BAOCAO/demo.gif" width="320" height="700"/> 
+<img src="BAOCAO/demo.gif" width="320" height="700"/>
+<br/>
+<img src="BAOCAO/firestore.png"/>
+<br/>
+<img src="BAOCAO/storage.png"/>

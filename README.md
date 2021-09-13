@@ -13,14 +13,7 @@ II. Main function:
   4. Shuffle/Repeat mode.
   5. Audio Equalizer
 
-III. Task:<br/> 
-Phạm Khắc Hoàng Tùng-1720252 : Project Structure,App Architecture<br/> 
-Trần Hữu Dần-1720040 : firebase download/upload<br/> 
-Nguyễn Hữu Đức-1720057: fetch song, list item<br/> 
-Phạm Hồng Ân-1720025 : layout UI<br/> 
-Nguyễn Văn Hải-1720078: fetch song, list item<br/> 
-
-IV. DEMO<br/>
+III. DEMO<br/>
 <img src="BAOCAO/demo.gif" width="320" height="700"/>
 <br/>
 <img src="BAOCAO/firestore.png"/>
